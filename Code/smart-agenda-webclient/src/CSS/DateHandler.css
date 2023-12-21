@@ -1,0 +1,103 @@
+.week-container {
+  display: flex;         
+  justify-content: space-between; 
+}
+.week-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.day {
+  flex: 1;              
+  text-align: center;   
+  padding: 10px;         
+  border: 1px solid #ccc; 
+}
+
+.calendar-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.calendar-table th, .calendar-table td {
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+}
+
+.calendar-table td {
+  height: 100px;
+  vertical-align: top;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; 
+  padding: 20px;
+  background-color: white;
+  border: 1px solid black;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.popup > span {
+  margin-bottom: 20px;
+}
+
+.popup label {
+  margin-top: 10px;
+  display: block;
+}
+
+.popup input[type="text"],
+.popup input[type="time"],
+.popup select {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+.popup input[type="checkbox"] {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.popup > button:last-child {
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.popup button:first-child {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+.popup .checkbox-container {
+  display: flex;
+  align-items: center;  
+}
+
+.eventpopup {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+

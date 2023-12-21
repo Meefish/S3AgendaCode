@@ -1,0 +1,15 @@
+.week-container {
+  display: flex;         
+  justify-content: space-between; 
+}
+.week-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.day {
+  flex: 1;              
+  text-align: center;   
+  padding: 10px;         
+  border: 1px solid #ccc; 
+}

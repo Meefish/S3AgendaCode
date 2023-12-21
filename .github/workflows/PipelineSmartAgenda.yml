@@ -1,0 +1,80 @@
+name: ASP.NET Core CI/CD Pipeline with Docker
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+env:
+  DOTNET_VERSION: '7.0.x' 
+
+jobs:
+
+
+  build-api:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore Dependencies
+      run: dotnet restore Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj
+
+    - name: Build Project
+      run: dotnet build Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj --configuration Release --no-restore
+      
+  test-api:
+    needs: build-api
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Run Unit Tests
+      run: dotnet test Code/Smart_Agenda_API/Logic.UnitTest/
+
+
+  deploy:
+    needs: test-api 
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Clear NuGet Cache
+      run: dotnet nuget locals all --clear
+
+    - name: Publish Project
+      run: dotnet publish Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj --configuration Release -o out
+
+    - name: Build Docker Image for API
+      run: docker build -t amrabat/smartagendaimages:latestapi Code/Smart_Agenda_API/
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Push Docker Image for API to Docker Hub
+      run: docker push amrabat/smartagendaimages:latestapi
+
+    - name: Build Docker Image for Web Client
+      run: docker build  -t amrabat/smartagendaimages:latestwebclient Code/smart-agenda-webclient/
+
+    - name: Push Docker Image for Web Client to Docker Hub
+      run: docker push amrabat/smartagendaimages:latestwebclient
