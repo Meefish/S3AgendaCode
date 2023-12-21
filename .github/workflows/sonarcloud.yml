@@ -41,3 +41,4 @@ jobs:
           args:
             -Dsonar.projectKey=Meefish_S3AgendaCode
             -Dsonar.organization=meefish
+            -Dsonar.sources=Code/Smart_Agenda_API,Code/smart-agenda-webclient
