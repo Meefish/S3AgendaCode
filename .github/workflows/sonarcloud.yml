@@ -23,5 +23,5 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
         with:
           args:
-            -Dsonar.projectKey=S3AgendaCode
+            -Dsonar.projectKey=Meefish_S3AgendaCode
             -Dsonar.organization=meefish
