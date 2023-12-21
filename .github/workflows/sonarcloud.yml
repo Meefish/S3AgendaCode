@@ -24,4 +24,4 @@ jobs:
         with:
           args:
             -Dsonar.projectKey=S3AgendaCode
-            -Dsonar.organization=Meefish
+            -Dsonar.organization=meefish
