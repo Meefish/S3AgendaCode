@@ -6,12 +6,12 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
-  
+
 env:
-  DOTNET_VERSION: '7.0.x' 
-  
+  DOTNET_VERSION: '7.0.x'
+
 permissions:
-  pull-requests: read 
+  pull-requests: read
 
 jobs:
   Analysis:
@@ -20,36 +20,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-            fetch-depth: 0
+          fetch-depth: 0
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
       - name: Restore Dependencies
         run: dotnet restore Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj
 
       - name: Build Project
         run: dotnet build Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj --configuration Release --no-restore
 
+      - name: Install dotnet-coverage
+        run: dotnet tool install --global dotnet-coverage
+
+      - name: Test and Collect Coverage
+        run: |
+          dotnet-coverage collect 'dotnet test Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj' -f xml -o coverage.xml
+
       - name: Analyze with SonarCloud
         uses: SonarSource/sonarcloud-github-action@de2e56b42aa84d0b1c5b622644ac17e505c9a049
         env:
-          GITHUB_TOKEN: ${{ secrets.SONARGITHUB_TOKEN }}  
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+          GITHUB_TOKEN: ${{ secrets.SONARGITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args:
+          args: >
             -Dsonar.projectKey=Meefish_S3AgendaCode
             -Dsonar.organization=meefish
-          run: |
-           pushd: Code/Smart_Agenda_API
-            dotnet tool install --global dotnet-coverage
-            dotnet sonarscanner begin /k:"Meefish_S3AgendaCode" \
-              /o:"meefish" \
-              /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
-              /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
-            dotnet build --no-incremental
-            dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
-            dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
-            popd
-
+            -Dsonar.cs.vscoveragexml.reportsPaths=coverage.xml
