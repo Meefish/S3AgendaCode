@@ -31,7 +31,13 @@ jobs:
 
       - name: Build Project
         run: dotnet build Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj --configuration Release --no-restore
-
+        
+      - name: Install SonarCloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/.sonar/scanner
+          dotnet tool update dotnet-sonarscanner --tool-path ~/.sonar/scanner
+          
       - name: Analyze with SonarCloud
         env:
           GITHUB_TOKEN: ${{ secrets.SONARGITHUB_TOKEN }}  
