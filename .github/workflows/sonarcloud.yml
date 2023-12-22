@@ -42,16 +42,27 @@ jobs:
         run: |
           mkdir -p ~/.sonar/scanner
           dotnet tool update dotnet-sonarscanner --tool-path ~/.sonar/scanner
-          
-      - name: Analyze with SonarCloud
+
+
+      - name: SonarCloudScan1
         env:
           GITHUB_TOKEN: ${{ secrets.SONARGITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
         run: |
           dotnet tool install --global dotnet-coverage
           pushd Code/Smart_Agenda_API
-          ~/.sonar/scanner/dotnet-sonarscanner begin /k:"Meefish_S3AgendaCode" /o:"meefish" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io/" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          ~/.sonar/scanner/dotnet-sonarscanner begin /k:"meefish_S3AgendaCodeBack_End" /o:"meefish" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io/" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           dotnet build --no-incremental
           dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
           ~/.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
           popd
+
+      - name: SonarCloudSCan2
+        uses: SonarSource/sonarcloud-github-action@de2e56b42aa84d0b1c5b622644ac17e505c9a049
+        env:
+          GITHUB_TOKEN: ${{ secrets.SONARGITHUB_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+        with:
+          args:
+            -Dsonar.projectKey=Meefish_S3AgendaCode
+            -Dsonar.organization=meefish
