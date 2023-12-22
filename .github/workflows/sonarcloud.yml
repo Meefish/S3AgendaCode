@@ -38,9 +38,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SONARGITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
         with:
-          args:
-            -Dsonar.projectKey=Meefish_S3AgendaCode
-            -Dsonar.organization=meefish
           run: |
             dotnet tool install --global dotnet-coverage
             pushd: Code/Smart_Agenda_API
