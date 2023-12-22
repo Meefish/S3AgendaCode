@@ -41,4 +41,11 @@ jobs:
           args:
             -Dsonar.projectKey=Meefish_S3AgendaCode
             -Dsonar.organization=meefish
-            -Dsonar.sources=Code/Smart_Agenda_API,Code/smart-agenda-webclient
+
+            dotnet sonarscanner begin /k:"<Meefish_S3AgendaCode>"
+              /d:sonar.login="<secrets.SONAR_TOKEN>"
+              /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+            dotnet build --no-incremental
+            dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
+            dotnet sonarscanner end /d:sonar.login="<secrets.SONAR_TOKEN>"
+
