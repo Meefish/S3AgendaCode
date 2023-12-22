@@ -38,7 +38,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
         run: |
           dotnet tool install --global dotnet-coverage
-          pushd: Code/Smart_Agenda_API
+          pushd Code/Smart_Agenda_API
           ~/.sonar/scanner/dotnet-sonarscanner begin /k:"Meefish_S3AgendaCode" /o:"meefish" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io/" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           dotnet build --no-incremental
           dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
