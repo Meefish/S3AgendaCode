@@ -41,7 +41,7 @@ jobs:
           args:
             -Dsonar.projectKey=Meefish_S3AgendaCode
             -Dsonar.organization=meefish
-
+          run:
             dotnet sonarscanner begin /k:"<Meefish_S3AgendaCode>"
               /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
               /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
