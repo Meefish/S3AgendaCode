@@ -59,11 +59,12 @@ namespace Smart_Agenda_DAL
             return await ExecuteDbOperationAsync(async () =>
             {
                 var currentTime = DateTime.Now;
-                var checkInterval = TimeSpan.FromMinutes(2);
-                var tasks = await _context.Task
+                //  var checkInterval = TimeSpan.FromSeconds(15);  // If you don't want to fry the database
+                var checkInterval = TimeSpan.FromMilliseconds(35); // The 35 milliseconds are added because without the polling 
+                var tasks = await _context.Task                    // the inbox would be spammed with notifications lol
                            .Where(task => task.CalendarId == calendarId &&
-                                            task.DueDate >= currentTime &&
-                                            task.DueDate <= currentTime + checkInterval)
+                            task.DueDate >= currentTime &&
+                            task.DueDate <= currentTime + checkInterval)
                            .ToListAsync();
 
                 return tasks;

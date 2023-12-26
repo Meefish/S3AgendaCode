@@ -48,15 +48,8 @@ function LiveTaskEvent({token}) {     // eslint-disable-next-line
             console.log("WebSocket closed");
 
         };
-        const fetchUpdates = () => {
-            if (ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ calendarId})); 
-            }
-        };
 
-        const interval = setInterval(fetchUpdates, 22000); 
         return () => {
-            clearInterval(interval); 
             ws.close(); 
         };
     },[token]);
