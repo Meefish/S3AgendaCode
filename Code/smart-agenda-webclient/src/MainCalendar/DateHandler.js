@@ -22,7 +22,7 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
 
   const [taskName, SetTaskName] = useState('');
   const [taskTime, SetTaskTime] = useState('');
-  const [taskPriority, SetTaskPriority] = useState('low');
+  const [taskPriority, SetTaskPriority] = useState(0);
   const [taskStatus, SetTaskStatus] = useState(false);
 
   const IsTaskOnDay = (task, day, month, year) => {
@@ -83,9 +83,14 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
 
   
   const HandleSaveTask = async () => {
-
-    const dueDateTime = new Date(`${FormatDate(selectedDate)}T${taskTime}`).toISOString();
-
+    const [year, month, day] = FormatDate(selectedDate).split('-').map(Number);
+    let dueDateTime;
+    if (taskTime) {
+      const [hours, minutes] = taskTime.split(':').map(Number);
+      dueDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes)).toISOString();
+    } else {
+      dueDateTime = new Date(Date.UTC(year, month - 1, day)).toISOString();
+    }
     const taskData = {
       "TaskName": taskName,
       "DueDate": dueDateTime,
@@ -116,7 +121,9 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
 
   const HandleUpdateTask = async (taskId, taskName, formattedDate, formattedTime, taskPriority, taskStatus) => {
     
-    const dueDateTime = new Date(`${formattedDate}T${formattedTime}`);
+    const [year, month, day] = formattedDate.split('-').map(Number);
+    const [hours, minutes] = formattedTime.split(':').map(Number);
+    const dueDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes)).toISOString();
 
     const updatedTaskData = {
         "TaskName": taskName,
