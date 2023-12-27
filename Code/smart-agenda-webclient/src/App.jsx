@@ -2,41 +2,60 @@ import MainCalendar from "./MainCalendar/MainCalendar";
 import Login from "./Login/Login";
 import React, {useState, useEffect} from "react";
 
+function IsTokenExpired(token) {
+  try {
+    const decoded = JSON.parse(atob(token.split('.')[1]));
+    const exp = decoded.exp * 1000; 
+    return Date.now() > exp;
+  } catch {
+    return true; 
+  }
+}
+
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, SetIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
-    if (token) {
-      setIsLoggedIn(true);
+    if (token && !IsTokenExpired(token)) {
+      SetIsLoggedIn(true);
     }
-  }, []);
-  
-  const handleLogin = () => {
+
+    const interval = setInterval(() => {
+      const token = localStorage.getItem('jwtToken');
+      if (!token || IsTokenExpired(token)) {
+        localStorage.removeItem('jwtToken');
+        SetIsLoggedIn(false);
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []); 
+
+  const HandleLogin = () => {
     const token = localStorage.getItem('jwtToken');
     if (token) {
-      setIsLoggedIn(true);
+      SetIsLoggedIn(true);
     }
   };
 
-  const handleLogout = () => {
+  const HandleLogout = () => {
     localStorage.removeItem('jwtToken');
-    setIsLoggedIn(false);
+    SetIsLoggedIn(false);
   };
 
   return (
     <div>
       {isLoggedIn ? (
         <div>
-          <button onClick={handleLogout}>Logout</button>
+          <button onClick={HandleLogout}>Logout</button>
           <MainCalendar />
         </div>
       ) : (
-        <Login onLogin={handleLogin} />
+        <Login onLogin={HandleLogin} />
       )}
     </div>
   );
 }
-
 
 export default App;
