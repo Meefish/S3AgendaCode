@@ -6,7 +6,7 @@ namespace Smart_Agenda_API.Mapper
     public static class UserMapper
     {
 
-        public static Smart_Agenda_Logic.Domain.User ToEntity(UserCreationDTO creationDTO)
+        public static User ToEntity(UserCreationDTO creationDTO)
         {
             if (creationDTO == null)
             {

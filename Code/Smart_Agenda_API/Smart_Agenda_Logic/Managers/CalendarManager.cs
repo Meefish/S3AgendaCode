@@ -45,12 +45,14 @@ namespace Smart_Agenda_Logic.Managers
             return await _calendarDAL.GetCalendarForUser(userId);
         }
 
-        public async Task<List<Domain.Task>> CheckTaskEvent(int calendarId)
+        /*
+        public async Task<List<Domain.Task>> CheckTaskEvent(int calendarId)               //Didn't need to be checked in Manager, for getting the websocket learning goal approved
         {
             return await ExecuteUserOperationAsync(async () =>
             {
                 return await _calendarDAL.CheckTaskEvent(calendarId);
             }, ex => new CalendarException("Checking task event failed", ex));
         }
+        */
     }
 }
