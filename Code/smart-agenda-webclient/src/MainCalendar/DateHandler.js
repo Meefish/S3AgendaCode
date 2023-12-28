@@ -22,12 +22,17 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
 
   const [taskName, SetTaskName] = useState('');
   const [taskTime, SetTaskTime] = useState('');
-  const [taskPriority, SetTaskPriority] = useState('low');
+  const [taskPriority, SetTaskPriority] = useState(0);
   const [taskStatus, SetTaskStatus] = useState(false);
 
-  const IsTaskOnDay = (task, day, month, year) => {
+  const currentDay = GetCurrentDay();
+  const currentMonth = GetCurrentMonth();
+  const currentYear = GetCurrentYear();
+  
+  const IsTaskOnDay = (task, day, actualMonth, actualYear) => {
     const taskDate = new Date(task.dueDate);
-    return taskDate.getDate() === day && taskDate.getMonth() === (month) && taskDate.getFullYear() === year;
+    return taskDate.getDate() === day && taskDate.getMonth() === actualMonth && 
+                                          taskDate.getFullYear() === actualYear;
   };
   
   const SortTasksByTime = (tasks) => {
@@ -83,9 +88,14 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
 
   
   const HandleSaveTask = async () => {
-
-    const dueDateTime = new Date(`${FormatDate(selectedDate)}T${taskTime}`).toISOString();
-
+    const [year, month, day] = FormatDate(selectedDate).split('-').map(Number);
+    let dueDateTime;
+    if (taskTime) {
+      const [hours, minutes] = taskTime.split(':').map(Number);
+      dueDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes)).toISOString();
+    } else {
+      dueDateTime = new Date(Date.UTC(year, month - 1, day)).toISOString();
+    }
     const taskData = {
       "TaskName": taskName,
       "DueDate": dueDateTime,
@@ -116,7 +126,9 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
 
   const HandleUpdateTask = async (taskId, taskName, formattedDate, formattedTime, taskPriority, taskStatus) => {
     
-    const dueDateTime = new Date(`${formattedDate}T${formattedTime}`);
+    const [year, month, day] = formattedDate.split('-').map(Number);
+    const [hours, minutes] = formattedTime.split(':').map(Number);
+    const dueDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes)).toISOString();
 
     const updatedTaskData = {
         "TaskName": taskName,
@@ -161,13 +173,13 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
     const actualMonth = rowIndex === 0 && day > 7 ? month === 0 ? 11 : month - 1 : rowIndex === Math.ceil(calendarDays.length / 7) - 1 && day <= 7 ? month === 11 ? 0 : month + 1 : month;
     const actualYear = (rowIndex === 0 && day > 7 && month === 0) || (rowIndex === Math.ceil(calendarDays.length / 7) - 1 && day <= 7 && month === 11) ? year + (month === 0 ? -1 : 1) : year;
     
-    SetSelectedDate(`${day} ${GetMonthYear(actualMonth, actualYear)}`);
+    SetSelectedDate(`${day} ${GetMonthYearNames(actualMonth, actualYear)}`);
     SetIsAddPopupVisible(true);
   };
 
   const HandleTaskClick = (task) => {
     const taskDate = new Date(task.dueDate);
-    const formattedDate = `${taskDate.getDate()} ${GetMonthYear(taskDate.getMonth(), taskDate.getFullYear())}`;
+    const formattedDate = `${taskDate.getDate()} ${GetMonthYearNames(taskDate.getMonth(), taskDate.getFullYear())}`;
     const formattedTime = task.dueDate.split('T')[1].substring(0, 5);
 
     SetSelectedTask({
@@ -182,7 +194,7 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
 
   return (
     <div>
-      <span>{GetMonthYear(month, year)}</span>
+      <span>{GetMonthYearNames(month, year)}</span>
       <button onClick={HandlePrevMonth}>Previous</button>
       <button onClick={HandleCurrentDate}>Today</button>
       <button onClick={HandleNextMonth}>Next</button>
@@ -203,10 +215,13 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
           {Array.from({ length: Math.ceil(calendarDays.length / 7) }).map((_, rowIndex) => (
             <tr key={rowIndex}>
               {calendarDays.slice(rowIndex * 7, rowIndex * 7 + 7).map((day, dayIndex) => {
-                  let dayTasks = Array.isArray(tasks) ? tasks.filter(task => IsTaskOnDay(task, day, month, year)) : [];
+                  const { actualMonth, actualYear, isActualMonth } = GetActualMonthYear(day, rowIndex, month, year);
+                  const isCurrentDay = day === currentDay && actualMonth === currentMonth && actualYear === currentYear && isActualMonth;
+                  let dayTasks = Array.isArray(tasks) ? tasks.filter(task => IsTaskOnDay(task, day, actualMonth, actualYear)) : [];
                   dayTasks = SortTasksByTime(dayTasks);  
                   return (
                     <td key={dayIndex} onClick={(event) => HandleDayClick(day, rowIndex, event)}>
+                    <div className={isCurrentDay ? "current-day" : ""}></div>
                     {day || ''}
                     {dayTasks.map(task => (
                       <TaskBar key={task.taskId} task={task} onClick={HandleTaskClick} />
@@ -256,6 +271,9 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
     </div>
   );
 }
+function GetCurrentDay(){
+  return new Date().getDate();
+}
 
 function GetCurrentMonth() {
   return new Date().getMonth();
@@ -265,7 +283,7 @@ function GetCurrentYear() {
   return new Date().getFullYear();
 }
 
-function GetMonthYear(month, year) {
+function GetMonthYearNames(month, year) {
   const monthNames = ["January", "February", "March", "April", "May", "June",
                       "July", "August", "September", "October", "November", "December"];
   return `${monthNames[month]} ${year}`;
@@ -310,6 +328,29 @@ function GetDaysInMonth(month, year) {
 
 function GetFirstDayOfMonth(month, year) {
   return new Date(year, month, 0).getDay();
+}
+
+function GetActualMonthYear(day, rowIndex, month, year) {
+  let actualMonth = month;
+  let actualYear = year;
+  let isActualMonth = true;
+  const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInPrevMonth = month === 0 ? GetDaysInMonth(11, year - 1) : GetDaysInMonth(month - 1, year);
+
+
+  if (rowIndex === 0 && day > daysInPrevMonth - firstDayIndex) {
+    actualMonth = month === 0 ? 11 : month - 1;
+    actualYear = month === 0 ? year - 1 : year;
+    isActualMonth = false;
+  }
+  
+  if (rowIndex >= 4 && day <= 14) { 
+    actualMonth = month === 11 ? 0 : month + 1;
+    actualYear = month === 11 ? year + 1 : year;
+    isActualMonth = false;
+  }
+
+  return { actualMonth, actualYear, isActualMonth };
 }
 
 export default DateHandler;

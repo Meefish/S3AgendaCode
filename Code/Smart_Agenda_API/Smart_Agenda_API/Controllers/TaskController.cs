@@ -38,6 +38,7 @@ namespace Smart_Agenda_API.Controllers
             }
         }
 
+        /*
         [HttpGet("{id}")]
         [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> GetTask(int id)
@@ -52,6 +53,7 @@ namespace Smart_Agenda_API.Controllers
                 return StatusCode(500, $"Error getting task: {taskEx.Message}");
             }
         }
+        */
 
         [HttpPut("{id}")]
         [Authorize(Roles = "User, Admin")]

@@ -100,4 +100,21 @@
   z-index: 100;
 }
 
+.current-day {
+  position: relative;
+  text-align: center;
+}
+
+.current-day::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  width: 24px; 
+  height: 24px; 
+  background-color: blue;
+  border-radius: 50%;
+  z-index: -1;
+}
 

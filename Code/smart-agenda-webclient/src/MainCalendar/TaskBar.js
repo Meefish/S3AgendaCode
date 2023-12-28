@@ -3,6 +3,13 @@ import React from 'react';
 const TaskBar = ({ task, onClick }) => {
   const FormatTime = (dateString) => {
     const date = new Date(dateString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    if (hours === 0 && minutes === 0) {
+      return '';
+    }
+    
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
@@ -12,7 +19,7 @@ const TaskBar = ({ task, onClick }) => {
   };
 
 
-  const getPriorityColor = (priority) => {
+  const GetPriorityColor = (priority) => {
     switch (priority) {
       case 0: 
         return 'green';
@@ -28,7 +35,7 @@ const TaskBar = ({ task, onClick }) => {
   };
 
   const taskStyle = {
-    backgroundColor: getPriorityColor(task.taskPriority),
+    backgroundColor: GetPriorityColor(task.taskPriority),
   };
 
   return (

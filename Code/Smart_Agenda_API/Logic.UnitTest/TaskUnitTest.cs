@@ -17,27 +17,26 @@ namespace Logic.UnitTest
             _mockTaskDAL = new MockTaskDAL();
         }
 
+
         [TestMethod]
-        public void AddTask_ShouldAddTaskToCalendar()
+        public async System.Threading.Tasks.Task AddTask_TaskMustContainDate()
         {
-            //Arrange
+
+            // Arrange
             var newTask = new Smart_Agenda_Logic.Domain.Task
             {
-                TaskName = "Grocery shopping",
-                DueDate = new DateTime(2024, 1, 27, 15, 0, 0),
-                TaskPriority = TaskPriority.Medium,
-                Status = false
+                TaskName = "Christmas Prep",
+                DueDate = new DateTime(),
+                TaskPriority = TaskPriority.High,
+                Status = false,
+                CalendarId = 1
             };
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
-            //Act
-            var result = taskManager.AddTask(newTask).Result;
 
-            //Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Grocery shopping", result.TaskName);
-            Assert.AreEqual(new DateTime(2024, 1, 27, 15, 0, 0), result.DueDate);
-            Assert.AreEqual(TaskPriority.Medium, result.TaskPriority);
-            Assert.IsFalse(result.Status);
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                                async () => await taskManager.AddTask(newTask));
+            Assert.AreEqual("Task date can't be empty.", exception.Message);
         }
 
         [TestMethod]
@@ -50,60 +49,242 @@ namespace Logic.UnitTest
                 TaskName = "Christmas Prep",
                 DueDate = new DateTime(1961, 12, 25, 16, 30, 0),
                 TaskPriority = TaskPriority.High,
-                Status = false
+                Status = false,
+                CalendarId = 1
+
             };
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
 
             // Act & Assert
             var exception = await Assert.ThrowsExceptionAsync<TaskException>(
-          async () => await taskManager.AddTask(newTask)
-      );
+                                async () => await taskManager.AddTask(newTask));
             Assert.AreEqual("Task date can't be in the past.", exception.Message);
         }
+
         [TestMethod]
-        public void UpdateTask_ShouldUpdateTaskName()
+        public async System.Threading.Tasks.Task AddTask_TaskMustContainName()
         {
 
-            //Arrange
-            var originalTask = new Smart_Agenda_Logic.Domain.Task
+            // Arrange
+            var newTask = new Smart_Agenda_Logic.Domain.Task
             {
-                TaskName = "Grocery shopping",
-                DueDate = new DateTime(2024, 1, 27, 15, 0, 0),
-                TaskPriority = TaskPriority.Medium,
-                Status = false
+                TaskName = "",
+                DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
+                TaskPriority = TaskPriority.High,
+                Status = false,
+                CalendarId = 1
+
             };
-
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
-            var addedTask = taskManager.AddTask(originalTask).Result;
-            //Act
-            addedTask.TaskName = "Visiting the mall";
-            var updatedTask = taskManager.UpdateTask(addedTask).Result;
 
-            //Assert
-            Assert.AreEqual("Visiting the mall", updatedTask.TaskName);
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                                async () => await taskManager.AddTask(newTask));
+            Assert.AreEqual("Task name can't be empty.", exception.Message);
         }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task AddTask_TaskNameCannotHaveMoreThan50Characters()
+        {
+
+            // Arrange
+            var newTask = new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
+                TaskPriority = TaskPriority.High,
+                Status = false,
+                CalendarId = 1
+            };
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                                async () => await taskManager.AddTask(newTask));
+            Assert.AreEqual("Task name can't exceed 50 characters.", exception.Message);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task AddTask_MustContainCalendarId()
+        {
+
+            // Arrange
+            var newTask = new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskName = "Buy a car.",
+                DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
+                TaskPriority = TaskPriority.High,
+                Status = false,
+                CalendarId = 0
+            };
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                                async () => await taskManager.AddTask(newTask));
+            Assert.AreEqual("The calendar doesn't exist.", exception.Message);
+        }
+
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task GetTask_MustContainTaskId()
+        {
+            //  Arrange
+            int calendarId = 0;
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+
+
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                              async () => await taskManager.GetTask(calendarId));
+            Assert.AreEqual("Task id can't be empty.", exception.Message);
+        }
+
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateTask_TaskMustContainDate()
+        {
+
+            // Arrange
+            var updatedTask = new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskName = "Buy a car",
+                DueDate = new DateTime(),
+                TaskPriority = TaskPriority.High,
+                Status = false,
+                CalendarId = 1
+            };
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                         async () => await taskManager.UpdateTask(updatedTask));
+            Assert.AreEqual("Task date can't be empty.", exception.Message);
+        }
+
 
         [TestMethod]
         public async System.Threading.Tasks.Task UpdateTask_TaskCannotBeInThePast()
         {
 
             // Arrange
-            var originalTask = new Smart_Agenda_Logic.Domain.Task
+            var updatedTask = new Smart_Agenda_Logic.Domain.Task
             {
-                TaskName = "Christmas Prep",
-                DueDate = new DateTime(2024, 1, 27, 15, 0, 0),
+                TaskName = "Buy a car",
+                DueDate = new DateTime(1961, 12, 25, 16, 30, 0),
                 TaskPriority = TaskPriority.High,
-                Status = false
+                Status = false,
+                CalendarId = 1
             };
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
-            var addedTask = taskManager.AddTask(originalTask).Result;
-            addedTask.DueDate = new DateTime(1961, 12, 25, 16, 30, 0);
 
             // Act & Assert
             var exception = await Assert.ThrowsExceptionAsync<TaskException>(
-                         async () => await taskManager.UpdateTask(addedTask));
+                         async () => await taskManager.UpdateTask(updatedTask));
             Assert.AreEqual("Task date can't be in the past.", exception.Message);
         }
+
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateTask_MustContainName()
+        {
+
+            // Arrange
+            var updatedTask = new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskName = "",
+                DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
+                TaskPriority = TaskPriority.High,
+                Status = false,
+                CalendarId = 1
+            };
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                         async () => await taskManager.UpdateTask(updatedTask));
+            Assert.AreEqual("Task name can't be empty.", exception.Message);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateTask_TaskNameCannotHaveMoreThan50Characters()
+        {
+
+            // Arrange
+            var updatedTask = new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
+                TaskPriority = TaskPriority.High,
+                Status = false,
+                CalendarId = 1
+            };
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                         async () => await taskManager.UpdateTask(updatedTask));
+            Assert.AreEqual("Task name can't exceed 50 characters.", exception.Message);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateTask_MustContainCalendarId()
+        {
+
+            // Arrange
+            var updatedTask = new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskName = "Buy a car",
+                DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
+                TaskPriority = TaskPriority.High,
+                Status = false,
+                CalendarId = 0
+            };
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                         async () => await taskManager.UpdateTask(updatedTask));
+            Assert.AreEqual("The calendar doesn't exist.", exception.Message);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateTask_MustContainTaskId()
+        {
+
+            // Arrange
+            var updatedTask = new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskName = "Buy a car",
+                DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
+                TaskPriority = TaskPriority.High,
+                Status = false,
+                CalendarId = 1,
+            };
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+
+
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                         async () => await taskManager.UpdateTask(updatedTask));
+            Assert.AreEqual("Task does not exist.", exception.Message);
+        }
+
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task DeleteTask_MustContainTaskId()
+        {
+            //  Arrange
+            int calendarId = 0;
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+
+
+            // Act & Assert
+            var exception = await Assert.ThrowsExceptionAsync<TaskException>(
+                              async () => await taskManager.DeleteTask(calendarId));
+            Assert.AreEqual("Task id can't be empty.", exception.Message);
+        }
+
     }
 }
 /*
@@ -126,3 +307,56 @@ namespace Logic.UnitTest
             //Moeten taken van de Database(NullExceptions) die ik eerst als exception in de code had staan, hier ook getest worden?
         }
 */
+
+
+//Commented because it only tests the mock 
+/*
+     [TestMethod]
+     public void AddTask_ShouldAddTaskToCalendar()
+     {
+         //Arrange
+         var newTask = new Smart_Agenda_Logic.Domain.Task
+         {
+             TaskName = "Grocery shopping",
+             DueDate = new DateTime(2024, 1, 27, 15, 0, 0),
+             TaskPriority = TaskPriority.Medium,
+             Status = false
+         };
+         TaskManager taskManager = new TaskManager(_mockTaskDAL);
+         //Act
+         var result = taskManager.AddTask(newTask).Result;
+
+         //Assert
+         Assert.IsNotNull(result);
+         Assert.AreEqual("Grocery shopping", result.TaskName);
+         Assert.AreEqual(new DateTime(2024, 1, 27, 15, 0, 0), result.DueDate);
+         Assert.AreEqual(TaskPriority.Medium, result.TaskPriority);
+         Assert.IsFalse(result.Status);
+     }
+     */
+
+//Commented because it only tests the mock
+/* 
+     [TestMethod]
+     public void UpdateTask_ShouldUpdateTaskName()
+     {
+
+         //Arrange
+         var originalTask = new Smart_Agenda_Logic.Domain.Task
+         {
+             TaskName = "Grocery shopping",
+             DueDate = new DateTime(2024, 1, 27, 15, 0, 0),
+             TaskPriority = TaskPriority.Medium,
+             Status = false
+         };
+
+         TaskManager taskManager = new TaskManager(_mockTaskDAL);
+         var addedTask = taskManager.AddTask(originalTask).Result;
+         //Act
+         addedTask.TaskName = "Visiting the mall";
+         var updatedTask = taskManager.UpdateTask(addedTask).Result;
+
+         //Assert
+         Assert.AreEqual("Visiting the mall", updatedTask.TaskName);
+     }
+     */
