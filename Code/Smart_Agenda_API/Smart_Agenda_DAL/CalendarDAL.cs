@@ -64,12 +64,17 @@ namespace Smart_Agenda_DAL
         {
             return await ExecuteDbOperationAsync(async () =>
             {
+
                 var calendar = await _context.Calendar
                                               .Where(calendar => calendar.UserId == userId)
                                               .FirstOrDefaultAsync();
-                return calendar;
-            }, ex => new CalendarException("Retrieving calendar went wrong", ex));
+                if (calendar == null)
+                {
+                    throw new CalendarException("No calendar found for user.");
+                }
 
+                return calendar;
+            }, ex => new CalendarException(ex.Message, ex));
         }
 
         public async Task<List<Smart_Agenda_Logic.Domain.Task>> CheckTaskEvent(int calendarId)
