@@ -36,7 +36,8 @@ namespace Smart_Agenda_API
 
         private void RegisterCalendarIdSocket(string calendarIdString, WebSocket webSocket)
         {
-            if (!_sockets.ContainsKey(calendarIdString))
+            WebSocket? existingSocket;
+            if (!_sockets.TryGetValue(calendarIdString, out existingSocket))
             {
                 _sockets.Add(calendarIdString, webSocket);
             }
@@ -51,7 +52,7 @@ namespace Smart_Agenda_API
 
             }
         }
-        private async Task SendMessageAsync(WebSocket webSocket, string message)
+        private static async Task SendMessageAsync(WebSocket webSocket, string message)
         {
             if (webSocket.State == WebSocketState.Open)
             {
@@ -86,10 +87,7 @@ namespace Smart_Agenda_API
         }
         private async Task CloseWebSocketAsync(string calendarIdString, WebSocket webSocket)
         {
-            if (_sockets.ContainsKey(calendarIdString))
-            {
-                _sockets.Remove(calendarIdString);
-            }
+            _sockets.Remove(calendarIdString);
 
             if (webSocket.State != WebSocketState.Closed && webSocket.State != WebSocketState.Aborted)
             {
