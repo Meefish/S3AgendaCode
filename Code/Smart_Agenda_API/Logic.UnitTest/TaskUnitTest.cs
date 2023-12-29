@@ -18,6 +18,31 @@ namespace Logic.UnitTest
         }
 
 
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task AddTask_ShouldAddTaskToCalendar()  //Is this testing the mock or is this a way of testing if everything works right?
+        {
+            //Arrange
+            var newTask = new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskName = "Grocery shopping",
+                DueDate = new DateTime(2024, 1, 27, 15, 0, 0),
+                TaskPriority = TaskPriority.Medium,
+                Status = false,
+                CalendarId = 1
+            };
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+            //Act
+            var result = await taskManager.AddTask(newTask);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Grocery shopping", result.TaskName);
+            Assert.AreEqual(new DateTime(2024, 1, 27, 15, 0, 0), result.DueDate);
+            Assert.AreEqual(TaskPriority.Medium, result.TaskPriority);
+            Assert.IsFalse(result.Status);
+        }
+
         [TestMethod]
         public async System.Threading.Tasks.Task AddTask_TaskMustContainDate()
         {
@@ -84,7 +109,7 @@ namespace Logic.UnitTest
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task AddTask_TaskNameCannotHaveMoreThan50Characters()
+        public async System.Threading.Tasks.Task AddTask_TaskNameCannotExceed50Characters()
         {
 
             // Arrange
@@ -130,14 +155,40 @@ namespace Logic.UnitTest
         public async System.Threading.Tasks.Task GetTask_MustContainTaskId()
         {
             //  Arrange
-            int calendarId = 0;
+            int taskId = 0;
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
 
 
             // Act & Assert
             var exception = await Assert.ThrowsExceptionAsync<TaskException>(
-                              async () => await taskManager.GetTask(calendarId));
-            Assert.AreEqual("Task id can't be empty.", exception.Message);
+                              async () => await taskManager.GetTask(taskId));
+            Assert.AreEqual("Task doesn't exist.", exception.Message);
+        }
+
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateTask_ShouldUpdateTaskName()   //Is this testing the mock or is this a way of testing if everything works right?
+        {
+
+            //Arrange
+            var updateTask = new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskName = "Visiting the mall",
+                DueDate = new DateTime(2024, 1, 27, 15, 0, 0),
+                TaskPriority = TaskPriority.Medium,
+                Status = false,
+                CalendarId = 1,
+                TaskId = 1
+
+            };
+
+            TaskManager taskManager = new TaskManager(_mockTaskDAL);
+            //Act
+
+            var updatedTask = await taskManager.UpdateTask(updateTask);
+
+            //Assert
+            Assert.AreEqual("Visiting the mall", updatedTask.TaskName);
         }
 
 
@@ -152,7 +203,8 @@ namespace Logic.UnitTest
                 DueDate = new DateTime(),
                 TaskPriority = TaskPriority.High,
                 Status = false,
-                CalendarId = 1
+                CalendarId = 1,
+                TaskId = 1
             };
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
 
@@ -174,7 +226,8 @@ namespace Logic.UnitTest
                 DueDate = new DateTime(1961, 12, 25, 16, 30, 0),
                 TaskPriority = TaskPriority.High,
                 Status = false,
-                CalendarId = 1
+                CalendarId = 1,
+                TaskId = 1
             };
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
 
@@ -196,7 +249,8 @@ namespace Logic.UnitTest
                 DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
                 TaskPriority = TaskPriority.High,
                 Status = false,
-                CalendarId = 1
+                CalendarId = 1,
+                TaskId = 1
             };
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
 
@@ -217,7 +271,8 @@ namespace Logic.UnitTest
                 DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
                 TaskPriority = TaskPriority.High,
                 Status = false,
-                CalendarId = 1
+                CalendarId = 1,
+                TaskId = 1
             };
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
 
@@ -238,7 +293,9 @@ namespace Logic.UnitTest
                 DueDate = new DateTime(2027, 2, 27, 15, 0, 0),
                 TaskPriority = TaskPriority.High,
                 Status = false,
-                CalendarId = 0
+                CalendarId = 0,
+                TaskId = 1
+
             };
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
 
@@ -260,6 +317,7 @@ namespace Logic.UnitTest
                 TaskPriority = TaskPriority.High,
                 Status = false,
                 CalendarId = 1,
+
             };
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
 
@@ -267,7 +325,7 @@ namespace Logic.UnitTest
             // Act & Assert
             var exception = await Assert.ThrowsExceptionAsync<TaskException>(
                          async () => await taskManager.UpdateTask(updatedTask));
-            Assert.AreEqual("Task does not exist.", exception.Message);
+            Assert.AreEqual("Task doesn't exist.", exception.Message);
         }
 
 
@@ -275,14 +333,14 @@ namespace Logic.UnitTest
         public async System.Threading.Tasks.Task DeleteTask_MustContainTaskId()
         {
             //  Arrange
-            int calendarId = 0;
+            int taskId = 0;
             TaskManager taskManager = new TaskManager(_mockTaskDAL);
 
 
             // Act & Assert
             var exception = await Assert.ThrowsExceptionAsync<TaskException>(
-                              async () => await taskManager.DeleteTask(calendarId));
-            Assert.AreEqual("Task id can't be empty.", exception.Message);
+                              async () => await taskManager.DeleteTask(taskId));
+            Assert.AreEqual("Task doesn't exist.", exception.Message);
         }
 
     }
@@ -309,54 +367,3 @@ namespace Logic.UnitTest
 */
 
 
-//Commented because it only tests the mock 
-/*
-     [TestMethod]
-     public void AddTask_ShouldAddTaskToCalendar()
-     {
-         //Arrange
-         var newTask = new Smart_Agenda_Logic.Domain.Task
-         {
-             TaskName = "Grocery shopping",
-             DueDate = new DateTime(2024, 1, 27, 15, 0, 0),
-             TaskPriority = TaskPriority.Medium,
-             Status = false
-         };
-         TaskManager taskManager = new TaskManager(_mockTaskDAL);
-         //Act
-         var result = taskManager.AddTask(newTask).Result;
-
-         //Assert
-         Assert.IsNotNull(result);
-         Assert.AreEqual("Grocery shopping", result.TaskName);
-         Assert.AreEqual(new DateTime(2024, 1, 27, 15, 0, 0), result.DueDate);
-         Assert.AreEqual(TaskPriority.Medium, result.TaskPriority);
-         Assert.IsFalse(result.Status);
-     }
-     */
-
-//Commented because it only tests the mock
-/* 
-     [TestMethod]
-     public void UpdateTask_ShouldUpdateTaskName()
-     {
-
-         //Arrange
-         var originalTask = new Smart_Agenda_Logic.Domain.Task
-         {
-             TaskName = "Grocery shopping",
-             DueDate = new DateTime(2024, 1, 27, 15, 0, 0),
-             TaskPriority = TaskPriority.Medium,
-             Status = false
-         };
-
-         TaskManager taskManager = new TaskManager(_mockTaskDAL);
-         var addedTask = taskManager.AddTask(originalTask).Result;
-         //Act
-         addedTask.TaskName = "Visiting the mall";
-         var updatedTask = taskManager.UpdateTask(addedTask).Result;
-
-         //Assert
-         Assert.AreEqual("Visiting the mall", updatedTask.TaskName);
-     }
-     */

@@ -11,7 +11,7 @@ namespace Smart_Agenda_Logic.Interfaces
 
         Task<User> DeleteUser(int id);
 
-        bool DoesEmailExist(string email);
+        //    bool DoesEmailExist(string email);
 
         Task<User> GetUserByEmail(string email);
 

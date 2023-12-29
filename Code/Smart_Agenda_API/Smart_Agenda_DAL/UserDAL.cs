@@ -87,10 +87,10 @@ namespace Smart_Agenda_DAL
             }, ex => new DeleteUserException("Deleting a user went wrong", ex));
         }
 
-        public bool DoesEmailExist(string email)
-        {
-            return _context.User.Any(u => u.Email == email);
-        }
+        /*      public bool DoesEmailExist(string email)
+              {
+                  return _context.User.Any(u => u.Email == email);
+              } */
 
         public async Task<User> GetUserByEmail(string email)
         {
