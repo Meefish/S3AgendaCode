@@ -63,7 +63,7 @@ namespace Smart_Agenda_Logic.Managers
             {
                 if (id <= 0)
                 {
-                    throw new RetrieveTaskException("Task id can't be empty.");
+                    throw new RetrieveTaskException("Task doesn't exist.");
                 }
                 return await _taskDAL.GetTask(id);
             }, ex => new TaskException(ex.Message, ex));
@@ -99,7 +99,7 @@ namespace Smart_Agenda_Logic.Managers
 
                 if (task.TaskId <= 0)
                 {
-                    throw new UpdateTaskException("Task does not exist.");
+                    throw new UpdateTaskException("Task doesn't exist.");
                 }
 
                 return await _taskDAL.UpdateTask(task);
@@ -112,7 +112,7 @@ namespace Smart_Agenda_Logic.Managers
             {
                 if (id <= 0)
                 {
-                    throw new RetrieveTaskException("Task id can't be empty.");
+                    throw new RetrieveTaskException("Task doesn't exist.");
                 }
                 return await _taskDAL.DeleteTask(id);
             }, ex => new TaskException(ex.Message, ex));

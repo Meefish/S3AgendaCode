@@ -26,7 +26,7 @@ namespace Smart_Agenda_DAL
             }
         }
 
-        public async Task<List<Smart_Agenda_Logic.Domain.Task>> RetrieveAllCalendarTasks(int calendarId)
+        public async Task<List<Smart_Agenda_Logic.Domain.Task>> GetAllCalendarTasks(int calendarId)
         {
             return await ExecuteDbOperationAsync(async () =>
             {
@@ -39,19 +39,37 @@ namespace Smart_Agenda_DAL
 
         public async Task DeleteAllCalendarTasks(int calendarId)
         {
-            var tasks = await _context.Task
-                             .Where(task => task.CalendarId == calendarId)
-                             .ToListAsync();
+            if (calendarId <= 0)
+            {
+                throw new CalendarException("The calendar doesn't exist.");
+            }
+            try
+            {
+                var tasks = await _context.Task
+                                 .Where(task => task.CalendarId == calendarId)
+                                 .ToListAsync();
 
-            _context.Task.RemoveRange(tasks);
-            await _context.SaveChangesAsync();
+                _context.Task.RemoveRange(tasks);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                throw new CalendarException("Deleting tasks went wrong", ex);
+            }
         }
 
         public async Task<Smart_Agenda_Logic.Domain.Calendar> GetCalendarForUser(int userId)
         {
-            return await _context.Calendar
-                                 .Where(calendar => calendar.UserId == userId)
-                                 .FirstOrDefaultAsync();
+            return await ExecuteDbOperationAsync(async () =>
+            {
+                var calendar = await _context.Calendar
+                                              .Where(calendar => calendar.UserId == userId)
+                                              .FirstOrDefaultAsync();
+                return calendar;
+            }, ex => new CalendarException("Retrieving calendar went wrong", ex));
+
         }
 
         public async Task<List<Smart_Agenda_Logic.Domain.Task>> CheckTaskEvent(int calendarId)

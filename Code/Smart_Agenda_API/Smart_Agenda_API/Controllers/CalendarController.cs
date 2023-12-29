@@ -22,7 +22,7 @@ namespace Smart_Agenda_API.Controllers
         {
             try
             {
-                List<Smart_Agenda_Logic.Domain.Task> tasks = await _calendarManager.RetrieveAllCalendarTasks(calendarId);
+                List<Smart_Agenda_Logic.Domain.Task> tasks = await _calendarManager.GetAllCalendarTasks(calendarId);
                 return Ok(tasks);
             }
             catch (CalendarException calendarEx)

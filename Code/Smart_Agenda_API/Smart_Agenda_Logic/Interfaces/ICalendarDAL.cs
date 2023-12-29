@@ -3,7 +3,7 @@
     public interface ICalendarDAL
     {
 
-        Task<List<Domain.Task>> RetrieveAllCalendarTasks(int calendarId);
+        Task<List<Domain.Task>> GetAllCalendarTasks(int calendarId);
         Task DeleteAllCalendarTasks(int calendarId);
 
         Task<Domain.Calendar> GetCalendarForUser(int userId);
