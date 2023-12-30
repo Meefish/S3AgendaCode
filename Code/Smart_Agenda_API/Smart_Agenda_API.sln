@@ -12,11 +12,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smart_Agenda_Logic", "Smart
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smart_Agenda_DAL", "Smart_Agenda_DAL\Smart_Agenda_DAL.csproj", "{17845230-8E31-416C-B288-95C2E6EC70F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic.UnitTest", "Logic.UnitTest\Logic.UnitTest.csproj", "{74F7E11A-FDF4-47A6-B245-92B32AEE9EB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logic.UnitTest", "Logic.UnitTest\Logic.UnitTest.csproj", "{74F7E11A-FDF4-47A6-B245-92B32AEE9EB3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{17845230-8E31-416C-B288-95C2E6EC70F5} = {17845230-8E31-416C-B288-95C2E6EC70F5}
 		{A6D7266F-21AE-49A2-BF8F-EC312FADE2D5} = {A6D7266F-21AE-49A2-BF8F-EC312FADE2D5}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{EE4271AE-F18E-4E3E-841B-ADFEE668CEA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{74F7E11A-FDF4-47A6-B245-92B32AEE9EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74F7E11A-FDF4-47A6-B245-92B32AEE9EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74F7E11A-FDF4-47A6-B245-92B32AEE9EB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE4271AE-F18E-4E3E-841B-ADFEE668CEA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE4271AE-F18E-4E3E-841B-ADFEE668CEA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE4271AE-F18E-4E3E-841B-ADFEE668CEA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE4271AE-F18E-4E3E-841B-ADFEE668CEA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

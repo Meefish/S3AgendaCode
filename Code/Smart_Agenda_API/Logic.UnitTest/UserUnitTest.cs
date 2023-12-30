@@ -10,7 +10,7 @@ namespace Logic.UnitTest
     public class UserUnitTest
     {
 
-        private IUserDAL? _mockUserDAL;
+        private IUserDAL _mockUserDAL;
 
         [TestInitialize]
         public void Setup()
