@@ -10,6 +10,7 @@ COPY ["Smart_Agenda_API/Smart_Agenda_API.csproj", "Smart_Agenda_API/"]
 COPY ["Smart_Agenda_DAL/Smart_Agenda_DAL.csproj", "Smart_Agenda_DAL/"]
 COPY ["Smart_Agenda_Logic/Smart_Agenda_Logic.csproj", "Smart_Agenda_Logic/"]
 COPY ["Logic.UnitTest/Logic.UnitTest.csproj", "Logic.UnitTest/"]
+COPY ["IntegrationTest/IntegrationTest.csproj", "IntegrationTest/"]
 
 # Clears NuGet cache
 RUN dotnet nuget locals all --clear
