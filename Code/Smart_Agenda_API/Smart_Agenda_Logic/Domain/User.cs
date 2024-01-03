@@ -13,10 +13,10 @@ namespace Smart_Agenda_Logic.Domain
         [Column("username")]
         public required string Username { get; set; }
 
-        [Column("hashed_password")]
-        public required string PasswordHash { get; set; }
         [Column("email")]
         public required string Email { get; set; }
+        [Column("hashed_password")]
+        public required string PasswordHash { get; set; }
         [Column("user_role")]
         public UserRole UserRole { get; set; }
         [JsonIgnore]
