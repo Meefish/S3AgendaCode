@@ -66,6 +66,9 @@ jobs:
       env:
           ASPNETCORE_ENVIRONMENT: "Testing"
           ConnectionStrings__TestConnection: "Server=localhost;Database=smart_agenda_test;User=root;Password=${{ secrets.DATABASETEST_CONNECTION_PASSWORD }}"
+          Jwt__Key: ${{ secrets.JWT_KEY }}
+          Jwt__Issuer: "https://localhost:7270"
+          Jwt__Audience: "http://localhost:3000/"
 
   deploy:
     needs: integrationtest-api
