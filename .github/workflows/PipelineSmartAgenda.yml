@@ -80,7 +80,7 @@ jobs:
           "TestConnection": "Server=localhost;Database=smart_agenda_test;User=root;Password=${{ secrets.DATABASETEST_CONNECTION_PASSWORD }}"
         },
         "AllowedOrigins": "http://localhost:3000"
-        }' > Code/Smart_Agenda_API/IntegrationTest/appsettings.json
+        }' > Code/Smart_Agenda_API/appsettings.json
 
     - name: Run Integration Tests
       run: dotnet test Code/Smart_Agenda_API/IntegrationTest/
