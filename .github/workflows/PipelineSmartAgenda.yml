@@ -110,6 +110,27 @@ jobs:
         
     - name: Build Project
       run: dotnet build Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj --configuration Release --no-restore
+
+    - name: Create appsettings.json for Tests
+      run: |
+        echo '{
+        "Jwt": {
+          "Key": "${{ secrets.JWT_KEY }}",
+          "Issuer": "https://localhost:7270",
+          "Audience": "http://localhost:3000/"
+        },
+        "Logging": {
+          "LogLevel": {
+            "Default": "Information",
+            "Microsoft.AspNetCore": "Warning"
+          }
+        },
+        "AllowedHosts": "*",
+        "ConnectionStrings": {
+          "TestConnection": "Server=localhost;Database=smart_agenda_test;User=root;Password=${{ secrets.DATABASETEST_CONNECTION_PASSWORD }}"
+        },
+        "AllowedOrigins": "http://localhost:3000"
+        }' > Code/Smart_Agenda_API/Smart_Agenda_API/appsettings.json
                 
     - name: Install SonarCloud scanner
       if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
@@ -130,7 +151,7 @@ jobs:
         ~/.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
         popd
         
-    - name: SonarCloudSCan2
+    - name: SonarCloudScan2
       uses: SonarSource/sonarcloud-github-action@de2e56b42aa84d0b1c5b622644ac17e505c9a049
       env:
           GITHUB_TOKEN: ${{ secrets.SONARGITHUB_TOKEN }}  
