@@ -61,14 +61,32 @@ jobs:
           mysql database: 'smart_agenda_test'
           mysql root password: '${{ secrets.DATABASETEST_CONNECTION_PASSWORD }}'
 
+    - name: Create appsettings.json for Tests
+      run: |
+        echo '{
+        "Jwt": {
+          "Key": "${{ secrets.JWT_KEY }}",
+          "Issuer": "https://localhost:7270",
+          "Audience": "http://localhost:3000/"
+        },
+        "Logging": {
+          "LogLevel": {
+            "Default": "Information",
+            "Microsoft.AspNetCore": "Warning"
+          }
+        },
+        "AllowedHosts": "*",
+        "ConnectionStrings": {
+          "TestConnection": "Server=localhost;Database=smart_agenda_test;User=root;Password=${{ secrets.DATABASETEST_CONNECTION_PASSWORD }}"
+        },
+        "AllowedOrigins": "http://localhost:3000"
+        }' > Code/Smart_Agenda_API/IntegrationTest/appsettings.json
+
     - name: Run Integration Tests
       run: dotnet test Code/Smart_Agenda_API/IntegrationTest/
       env:
           ASPNETCORE_ENVIRONMENT: "Testing"
-          ConnectionStrings__TestConnection: "Server=localhost;Database=smart_agenda_test;User=root;Password=${{ secrets.DATABASETEST_CONNECTION_PASSWORD }}"
-          Jwt__Key: ${{ secrets.JWT_KEY }}
-          Jwt__Issuer: "https://localhost:7270"
-          Jwt__Audience: "http://localhost:3000/"
+
 
   deploy:
     needs: integrationtest-api
