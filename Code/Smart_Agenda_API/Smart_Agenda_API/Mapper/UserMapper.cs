@@ -28,12 +28,12 @@ namespace Smart_Agenda_API.Mapper
                 return existingUser;
             }
 
-            if (updatedUser.Name != null)
+            if (!string.IsNullOrEmpty(updatedUser.Name))
             {
                 existingUser.Username = updatedUser.Name;
             }
 
-            if (updatedUser.Email != null)
+            if (!string.IsNullOrEmpty(updatedUser.Email))
             {
                 existingUser.Email = updatedUser.Email;
             }

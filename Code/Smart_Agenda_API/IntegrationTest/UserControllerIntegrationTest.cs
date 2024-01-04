@@ -235,7 +235,245 @@ namespace IntegrationTest
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
 
+        [TestMethod]
+        public async System.Threading.Tasks.Task GetUser_ReturnsOk_WhenUserIsFound()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.Admin.ToString());
 
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.GetAsync(url);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task GetUser_ReturnsNotFound_WhenUserIsNotFound()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.Admin.ToString());
+
+            var url = "/user/999";
+
+            // Act
+            var response = await _client.GetAsync(url);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task GetUser_ReturnsUnauthorized_WhenUserIsUnauthorized()
+        {
+            //Arrange
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.GetAsync(url);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+        [TestMethod]
+        public async System.Threading.Tasks.Task GetUser_ReturnsForbidden_WhenUserIsNotAdmin()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.User.ToString());
+
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.GetAsync(url);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateUser_ReturnsOk_WhenUserIsUpdated()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.Admin.ToString());
+
+            var userUpdateDTO = new UserUpdateDTO
+            {
+                Name = "TestUser",
+                Password = "TestPassword123!",
+                Email = "testuser@example.com"
+            };
+
+            var content = JsonContent.Create(userUpdateDTO);
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.PutAsync(url, content);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateUser_ReturnsBadRequest_WhenEmailIsInvalid()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.Admin.ToString());
+
+            var userUpdateDTO = new UserUpdateDTO
+            {
+                Name = "Test",
+                Password = "TestPassword123!",
+                Email = ""
+            };
+
+            var content = JsonContent.Create(userUpdateDTO);
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.PutAsync(url, content);
+
+            // Assert   
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateUser_ReturnsNotFound_WhenUserIsNotFound()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.Admin.ToString());
+
+            var userUpdateDTO = new UserUpdateDTO
+            {
+                Name = "Test",
+                Password = "TestPassword123!",
+                Email = "testuser@example.com"
+            };
+
+            var content = JsonContent.Create(userUpdateDTO);
+            var url = "/user/999";
+
+            // Act
+            var response = await _client.PutAsync(url, content);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateUser_ReturnsUnauthorized_WhenUserIsUnauthorized()
+        {
+            //Arrange
+            var userUpdateDTO = new UserUpdateDTO
+            {
+                Name = "Test",
+                Password = "TestPassword123!",
+                Email = "testuser@example.com"
+            };
+
+            var content = JsonContent.Create(userUpdateDTO);
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.PutAsync(url, content);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task UpdateUser_ReturnsForbidden_WhenUserIsNotAdmin()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.User.ToString());
+
+            var userUpdateDTO = new UserUpdateDTO
+            {
+                Name = "Test",
+                Password = "TestPassword123!",
+                Email = "testuser@example.com"
+            };
+
+            var content = JsonContent.Create(userUpdateDTO);
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.PutAsync(url, content);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task DeleteUser_ReturnsOk_WhenUserIsDeleted()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.Admin.ToString());
+
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.DeleteAsync(url);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task DeleteUser_ReturnsNotFound_WhenUserIsNotFound()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.Admin.ToString());
+
+            var url = "/user/999";
+
+            // Act
+            var response = await _client.DeleteAsync(url);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task DeleteUser_ReturnsUnauthorized_WhenUserIsUnauthorized()
+        {
+            //Arrange
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.DeleteAsync(url);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task DeleteUser_ReturnsForbidden_WhenUserIsNotAdmin()
+        {
+            //Arrange
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(UserRole.User.ToString());
+
+            var url = "/user/5";
+
+            // Act
+            var response = await _client.DeleteAsync(url);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+        }
 
     }
 }

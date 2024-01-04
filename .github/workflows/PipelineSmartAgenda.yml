@@ -30,20 +30,45 @@ jobs:
     - name: Build Project
       run: dotnet build Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj --configuration Release --no-restore
       
-  test-api:
+  unittest-api:
     needs: build-api
     runs-on: ubuntu-latest
     steps:
 
     - name: Checkout Repository
       uses: actions/checkout@v4
-      
+
     - name: Run Unit Tests
       run: dotnet test Code/Smart_Agenda_API/Logic.UnitTest/
 
+      
+  integrationtest-api:
+    needs: unittest-api 
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Setup MySQL
+      uses: mirromutth/mysql-action@v1.1
+      with:
+          mysql database: 'smart_agenda_test'
+          mysql root password: '${{ secrets.DATABASETEST_CONNECTION_PASSWORD }}'
+
+    - name: Run Integration Tests
+      run: dotnet test Code/Smart_Agenda_API/IntegrationTest/
+      env:
+          ASPNETCORE_ENVIRONMENT: "Testing"
+          ConnectionStrings__TestConnection: "Server=localhost;Database=smart_agenda_test;User=root;Password=${{ secrets.DATABASETEST_CONNECTION_PASSWORD }}"
 
   deploy:
-    needs: test-api 
+    needs: integrationtest-api
     runs-on: ubuntu-latest
     steps:
 

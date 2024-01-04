@@ -103,7 +103,7 @@ namespace Smart_Agenda_API.Controllers
             }
             catch (UserException userEx)
             {
-                return StatusCode(500, $"Error updating user: {userEx.Message}");
+                return NotFound($"Error getting user: {userEx.Message}");
             }
         }
 

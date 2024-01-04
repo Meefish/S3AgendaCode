@@ -163,7 +163,6 @@ namespace IntegrationTest
             Assert.IsNotNull(task);
         }
 
-
         [TestMethod]
         public async System.Threading.Tasks.Task UpdateTask_ReturnsNotFound_WhenTaskDoesNotExist()
         {
@@ -226,7 +225,7 @@ namespace IntegrationTest
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
         [TestMethod]
-        public async System.Threading.Tasks.Task GetTask_ReturnsNotFound_WhenTaskDoesNotExist()
+        public async System.Threading.Tasks.Task GetTask_ReturnsNotFound_WhenTaskIsNotFound()
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization =
@@ -281,7 +280,7 @@ namespace IntegrationTest
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task DeleteTask_ReturnsNotFound_WhenTaskDoesNotExist()
+        public async System.Threading.Tasks.Task DeleteTask_ReturnsNotFound_WhenTaskIsNotFound()
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization =

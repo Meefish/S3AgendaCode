@@ -26,25 +26,38 @@ namespace Smart_Agenda_DAL
             }
         }
 
+        private void checkCalendarExists(int calendarId)
+        {
+            bool calendarExists = _context.Calendar
+                                         .Any(calendar => calendar.CalendarId == calendarId);
+            if (!calendarExists)
+            {
+                throw new CalendarException($"The calendar with ID {calendarId} does not exist.");
+            }
+        }
+
+
+
         public async Task<List<Smart_Agenda_Logic.Domain.Task>> GetAllCalendarTasks(int calendarId)
         {
             return await ExecuteDbOperationAsync(async () =>
             {
+                checkCalendarExists(calendarId);
+
                 var tasks = await _context.Task
                                           .Where(task => task.CalendarId == calendarId)
                                           .ToListAsync();
+
                 return tasks;
             }, ex => new CalendarException("Retrieving tasks went wrong", ex));
         }
 
         public async Task DeleteAllCalendarTasks(int calendarId)
         {
-            if (calendarId <= 0)
-            {
-                throw new CalendarException("The calendar doesn't exist.");
-            }
             try
             {
+                checkCalendarExists(calendarId);
+
                 var tasks = await _context.Task
                                  .Where(task => task.CalendarId == calendarId)
                                  .ToListAsync();

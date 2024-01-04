@@ -77,7 +77,7 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
     }
 
     try {
-      const fetchedTasks = await AgendaApi.RetrieveAllCalendarTasks(calendarId, token);
+      const fetchedTasks = await AgendaApi.GetAllCalendarTasks(calendarId, token);
       setTasks(fetchedTasks);
     } catch (error) {
       console.error('Error fetching tasks', error);

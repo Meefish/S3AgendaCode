@@ -52,6 +52,16 @@ namespace IntegrationTest
                 Status = false,
                 CalendarId = 5
             });
+
+            _context.Task.Add(new Smart_Agenda_Logic.Domain.Task
+            {
+                TaskId = 6,
+                TaskName = "TestTask2",
+                DueDate = new DateTime(2030, 4, 2, 0, 0, 0),
+                TaskPriority = TaskPriority.Medium,
+                Status = false,
+                CalendarId = 5
+            });
             _context.SaveChanges();
 
         }

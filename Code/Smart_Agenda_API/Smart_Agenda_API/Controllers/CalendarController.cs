@@ -16,33 +16,33 @@ namespace Smart_Agenda_API.Controllers
             _calendarManager = calendarManager;
         }
 
-        [HttpGet("get")]
+        [HttpGet("{id}")]
         [Authorize(Roles = "User, Admin")]
-        public async Task<IActionResult> RetrieveAllCalendarTasks(int calendarId)
+        public async Task<IActionResult> GetAllCalendarTasks(int id)
         {
             try
             {
-                List<Smart_Agenda_Logic.Domain.Task> tasks = await _calendarManager.GetAllCalendarTasks(calendarId);
+                List<Smart_Agenda_Logic.Domain.Task> tasks = await _calendarManager.GetAllCalendarTasks(id);
                 return Ok(tasks);
             }
             catch (CalendarException calendarEx)
             {
-                return StatusCode(500, $"Error retrieving calendar tasks: {calendarEx.Message}");
+                return NotFound($"Error retrieving calendar tasks: {calendarEx.Message}");
             }
         }
 
+        [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteAllCalendarTasks(int calendarId)
+        public async Task<IActionResult> DeleteAllCalendarTasks(int id)
         {
             try
             {
-                await _calendarManager.DeleteAllCalendarTasks(calendarId);
+                await _calendarManager.DeleteAllCalendarTasks(id);
                 return Ok();
             }
             catch (CalendarException calendarEx)
             {
-                return StatusCode(500, $"Error deleting calendar tasks: {calendarEx.Message}");
+                return NotFound($"Error deleting calendar tasks: {calendarEx.Message}");
             }
         }
     }
