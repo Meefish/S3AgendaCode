@@ -1,4 +1,4 @@
-name: ASP.NET Core CI/CD Pipeline with Docker
+name: CI/CD Pipeline
 
 on:
   push:
@@ -88,8 +88,60 @@ jobs:
           ASPNETCORE_ENVIRONMENT: "Testing"
 
 
-  deploy:
+  sonarcloud-scan:
     needs: integrationtest-api
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+          java-version: 17
+          distribution: 'zulu'
+    - uses: actions/checkout@v4
+      with:
+          fetch-depth: 0
+        
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    - name: Restore Dependencies
+      run: dotnet restore Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj
+        
+    - name: Build Project
+      run: dotnet build Code/Smart_Agenda_API/Smart_Agenda_API/Smart_Agenda_API.csproj --configuration Release --no-restore
+                
+    - name: Install SonarCloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      run: |
+                  mkdir -p ~/.sonar/scanner
+                  dotnet tool update dotnet-sonarscanner --tool-path ~/.sonar/scanner
+            
+    - name: SonarCloudScan1
+      env:
+          GITHUB_TOKEN: ${{ secrets.SONARGITHUB_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+      run: |
+        dotnet tool install --global dotnet-coverage
+        pushd Code/Smart_Agenda_API
+        ~/.sonar/scanner/dotnet-sonarscanner begin /k:"meefish_S3AgendaCodeBack_End" /o:"meefish" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io/" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+        dotnet build --no-incremental
+        dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
+        ~/.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
+        popd
+        
+    - name: SonarCloudSCan2
+      uses: SonarSource/sonarcloud-github-action@de2e56b42aa84d0b1c5b622644ac17e505c9a049
+      env:
+          GITHUB_TOKEN: ${{ secrets.SONARGITHUB_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+      with:
+        args:
+          -Dsonar.projectKey=Meefish_S3AgendaCode
+          -Dsonar.organization=meefish
+      
+  deploy:
+    needs: sonarcloud-scan
     runs-on: ubuntu-latest
     steps:
 
