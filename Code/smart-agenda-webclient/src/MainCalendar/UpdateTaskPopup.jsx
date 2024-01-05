@@ -57,9 +57,9 @@ const UpdateTaskPopup = ({
       <button onClick={onClosePopup}>X</button>
       <span>Date: {selectedDate}</span>
 
-      <label htmlFor="taskName">Task:</label>
+      <label htmlFor="taskText">Task:</label>
       <input
-        id="taskName"
+        id="taskText"
         type="text"
         value={popupTaskName}
         onChange={HandleNameChange}

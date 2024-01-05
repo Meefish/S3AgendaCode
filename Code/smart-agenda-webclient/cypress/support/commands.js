@@ -1,25 +1,17 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('AddTask', (taskName, taskTime, taskPriority, taskStatus) => {
+  cy.get('td').contains('14').click('top');
+  cy.get('input#taskText').clear().type(taskName);
+  cy.get('input#taskTime').clear().type(taskTime);
+  cy.get('select#taskPriority').select(taskPriority);
+  if (taskStatus) {
+    cy.get('input#taskStatus').check();
+  } else {
+    cy.get('input#taskStatus').uncheck();
+  }
+  cy.get('.popup button').contains('Save Task').click();
+});
+
+Cypress.Commands.add('DeleteTask', (taskName, taskTime) => {
+  cy.get('.task-bar').contains(`${taskName} ${taskTime}`).click();
+  cy.get('.popup button').contains('Delete Task').click();
+});

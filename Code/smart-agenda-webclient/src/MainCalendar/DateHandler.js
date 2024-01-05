@@ -17,7 +17,7 @@ export function DateHandler({token}) {
   const [isPopupVisible, SetIsAddPopupVisible] = useState(false); 
   const [selectedDate, SetSelectedDate] = useState(null);  
   const [selectedTask, SetSelectedTask] = useState(null);
-const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
+  const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
     
 
   const [taskName, SetTaskName] = useState('');
@@ -194,7 +194,7 @@ const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
 
   return (
     <div>
-      <span>{GetMonthYearNames(month, year)}</span>
+      <span className="current-month-year-display">{GetMonthYearNames(month, year)}</span>
       <button onClick={HandlePrevMonth}>Previous</button>
       <button onClick={HandleCurrentDate}>Today</button>
       <button onClick={HandleNextMonth}>Next</button>
