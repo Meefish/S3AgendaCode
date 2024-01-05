@@ -53,10 +53,6 @@ namespace Smart_Agenda_API.Controllers
             try
             {
                 User user = await _userManager.GetUserByEmail(loginDTO.Email);
-                if (user == null)
-                {
-                    return Unauthorized("Invalid email");
-                }
 
                 var passwordValid = PasswordHasher.VerifyPassword(loginDTO.Password, user.PasswordHash);
                 if (!passwordValid)
@@ -70,7 +66,7 @@ namespace Smart_Agenda_API.Controllers
             }
             catch (UserException userEx)
             {
-                return StatusCode(500, $"Error logging in user: {userEx.Message}");
+                return NotFound($"Error getting user: {userEx.Message}");
             }
         }
 
@@ -86,7 +82,7 @@ namespace Smart_Agenda_API.Controllers
             }
             catch (UserException userEx)
             {
-                return StatusCode(500, $"Error getting user: {userEx.Message}");
+                return NotFound($"Error getting user: {userEx.Message}");
             }
         }
 
@@ -107,7 +103,7 @@ namespace Smart_Agenda_API.Controllers
             }
             catch (UserException userEx)
             {
-                return StatusCode(500, $"Error updating user: {userEx.Message}");
+                return NotFound($"Error getting user: {userEx.Message}");
             }
         }
 
@@ -122,7 +118,7 @@ namespace Smart_Agenda_API.Controllers
             }
             catch (UserException userEx)
             {
-                return StatusCode(500, $"Error deleting user: {userEx.Message}");
+                return NotFound($"Error deleting user: {userEx.Message}");
             }
         }
 

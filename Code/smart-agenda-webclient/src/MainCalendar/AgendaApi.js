@@ -17,9 +17,9 @@ export const AddTask = async (taskData, token) => {
   }
 };
 
-export const RetrieveAllCalendarTasks = async (calendarId, token) => {
+export const GetAllCalendarTasks = async (calendarId, token) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/Calendar/get`, {
+    const response = await axios.get(`${API_BASE_URL}/Calendar/${calendarId}`, {
       params: { calendarId },
       headers: { Authorization: `Bearer ${token}` },
     });

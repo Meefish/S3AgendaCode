@@ -38,7 +38,7 @@ namespace Smart_Agenda_API.Controllers
             }
         }
 
-        /*
+
         [HttpGet("{id}")]
         [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> GetTask(int id)
@@ -48,12 +48,12 @@ namespace Smart_Agenda_API.Controllers
                 Smart_Agenda_Logic.Domain.Task task = await _taskManager.GetTask(id);
                 return Ok(task);
             }
-            catch (TaskException taskEx)
+            catch (TaskException ex)
             {
-                return StatusCode(500, $"Error getting task: {taskEx.Message}");
+                return NotFound($"Error getting task: {ex.Message}");
             }
         }
-        */
+
 
         [HttpPut("{id}")]
         [Authorize(Roles = "User, Admin")]
@@ -72,7 +72,7 @@ namespace Smart_Agenda_API.Controllers
             }
             catch (TaskException taskEx)
             {
-                return StatusCode(500, $"Error updating task: {taskEx.Message}");
+                return NotFound($"Error getting task: {taskEx.Message}");
             }
         }
 
@@ -87,7 +87,7 @@ namespace Smart_Agenda_API.Controllers
             }
             catch (TaskException taskEx)
             {
-                return StatusCode(500, $"Error deleting task: {taskEx.Message}");
+                return NotFound($"Error getting task: {taskEx.Message}");
             }
         }
 

@@ -9,7 +9,7 @@ namespace Logic.UnitTest
     public class TaskUnitTest
     {
 
-        private ITaskDAL? _mockTaskDAL;
+        private ITaskDAL _mockTaskDAL;
 
         [TestInitialize]
         public void Setup()

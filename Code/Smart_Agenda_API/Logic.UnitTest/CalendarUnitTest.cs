@@ -7,7 +7,7 @@ namespace Logic.UnitTest
     [TestClass]
     public class CalendarUnitTest
     {
-        private ICalendarDAL? _mockCalendarDAL;
+        private ICalendarDAL _mockCalendarDAL;
 
         [TestInitialize]
         public void Setup()

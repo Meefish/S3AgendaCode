@@ -1,4 +1,5 @@
 import React from 'react';
+import '../CSS/DateHandler.css';
 
 const TaskBar = ({ task, onClick }) => {
   const FormatTime = (dateString) => {
