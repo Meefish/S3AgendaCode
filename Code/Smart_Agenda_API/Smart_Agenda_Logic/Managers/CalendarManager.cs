@@ -50,15 +50,15 @@ namespace Smart_Agenda_Logic.Managers
             }, ex => new CalendarException(ex.Message, ex));
         }
 
-        public async Task DeleteAllCalendarTasks(int calendarId)
+        public async Task DeleteAllCalendarTasks(int userId)
         {
             try
             {
-                if (calendarId <= 0)
+                if (userId <= 0)
                 {
                     throw new CalendarException("The calendar doesn't exist.");
                 }
-                await _calendarDAL.DeleteAllCalendarTasks(calendarId);
+                await _calendarDAL.DeleteAllCalendarTasks(userId);
             }
             catch (Exception ex)
             {

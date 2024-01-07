@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Smart_Agenda_Logic.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace Smart_Agenda_API.DTO
 {
@@ -8,6 +9,7 @@ namespace Smart_Agenda_API.DTO
         [EmailAddress(ErrorMessage = "Invalid email format")]
         public string? Email { get; set; }
         public string? Password { get; set; }
+        public UserRole? UserRole { get; set; }
 
     }
 }

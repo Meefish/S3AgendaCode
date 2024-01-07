@@ -86,6 +86,21 @@ namespace Smart_Agenda_API.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            try
+            {
+                List<User> users = await _userManager.GetAllUsers();
+                return Ok(users);
+            }
+            catch (UserException userEx)
+            {
+                return NotFound($"Error getting users: {userEx.Message}");
+            }
+        }
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUser(int id, UserUpdateDTO user)

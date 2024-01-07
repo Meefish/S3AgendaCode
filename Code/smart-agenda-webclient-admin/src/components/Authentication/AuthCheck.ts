@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import type { Router } from 'vue-router';
-import type {DecodedToken } from '../interface/DecodedToken';
+import type {DecodedToken } from '../interfaces/DecodedToken';
 
 export function IsTokenExpiredOrValid(router: Router) {
   const token = localStorage.getItem('jwtToken');

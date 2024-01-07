@@ -43,6 +43,11 @@ namespace Smart_Agenda_API.Mapper
                 existingUser.PasswordHash = PasswordHasher.HashPassword(updatedUser.Password);
             }
 
+            if (updatedUser.UserRole != null)
+            {
+                existingUser.UserRole = updatedUser.UserRole.Value;
+            }
+
             return existingUser;
         }
 

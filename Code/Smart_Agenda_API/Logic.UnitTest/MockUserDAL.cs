@@ -41,6 +41,10 @@ namespace Logic.UnitTest
             }
             return System.Threading.Tasks.Task.FromResult(user);
         }
+        public Task<List<User>> GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
         public Task<User> GetUserByEmail(string email)
         {
             var user = _database.FirstOrDefault(u => u.Email == email);
