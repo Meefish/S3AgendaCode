@@ -14,7 +14,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close', 'update']);
-
+const token = ref(localStorage.getItem('jwtToken') || '');
 const username = ref('');
 const email = ref('');
 const password = ref('');
@@ -42,11 +42,11 @@ const HandleUpdate = async () => {
     userRole: userRoleInt, 
   };
   try { 
-    const response = await UpdateUser(props.user.userId, updatedUserData); 
+    if (token){
+    const response = await UpdateUser(props.user.userId, updatedUserData, token.value); 
     emit('update', response); 
     emit('close');
-
-    console.log('API:', updatedUserData);
+  }
   } catch (error) {
     console.error('Failed to update user', error);
   }

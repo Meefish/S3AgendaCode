@@ -4,7 +4,7 @@ import { AddUser } from '../API/UserApi';
 import type { AddUserData } from '../interfaces/UserData/AddUser';
 
 const emit = defineEmits(['close', 'add']);
-
+const token = ref(localStorage.getItem('jwtToken') || '');
 const username = ref('');
 const email = ref('');
 const password = ref('');
@@ -17,9 +17,11 @@ const HandleAdd = async () => {
   };
 
   try { 
-    await AddUser(newUserData);
+    if (token){
+    await AddUser(newUserData, token.value);
     emit('add');
     emit('close');
+    }
   } catch (error) {
     console.error('Failed to add user', error);
   }

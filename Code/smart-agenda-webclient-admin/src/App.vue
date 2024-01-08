@@ -9,7 +9,7 @@ let intervalId: number;
 const startInterval = () => {
   intervalId = setInterval(() => {
     IsTokenExpiredOrValid(router);
-  }, 100020200);
+  }, 10000);
 };
 
 onMounted(() => {

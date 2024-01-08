@@ -11,12 +11,13 @@ const users = ref<User[]>([]);
 const error = ref<string | null>(null);
 const isAddPopupVisible = ref(false);
 const isUpdatePopupVisible = ref(false);
-const selectedUser = ref<User | null>(null)
+const selectedUser = ref<User | null>(null);
+const token = ref(localStorage.getItem('jwtToken') || '');
 
 const FetchUsers = async () => {
   try {
-    
-    users.value = await GetAllUsers();
+    if (token){
+      users.value = await GetAllUsers(token.value);}
   } catch (err: any) {
         error.value = err.message;
       }
@@ -35,15 +36,19 @@ const HandleEditUser = (user: User) => {
 
 const HandleResetCalendar = async (userId: number) => {
   try {
-    await ResetCalendar(userId);
+    if (token){
+      await ResetCalendar(userId, token.value);}
+
   } catch (error: any) {
     error.value = `Error resetting calendar: ${error.message}`;
   }  
 };
 const HandleDeleteUser = async (userId: number) => {
     try {
-      await DeleteUser(userId);
-      await FetchUsers(); 
+      if (token){
+      await DeleteUser(userId, token.value);
+      await FetchUsers();
+    }
     } catch (error: any) {
       error.value = `Error deleting user: ${error.message}`;
     }

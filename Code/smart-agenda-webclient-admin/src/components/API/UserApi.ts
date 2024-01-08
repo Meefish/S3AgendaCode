@@ -4,10 +4,15 @@ import type { UpdateUserData } from '../interfaces/UserData/UpdateUser';
 import type { AddUserData } from '../interfaces/UserData/AddUser';
 
 const API_BASE_URL = 'https://localhost:7270';
-const token = localStorage.getItem('jwtToken');
 
 
-export async function AddUser(userData: AddUserData) {
+
+export async function AddUser(userData: AddUserData, token : string) {
+
+  if (!token) {
+    throw new Error('No token found');
+  }
+
   try {
     const response = await axios.post(`${API_BASE_URL}/user/register`, userData, {
       headers: {
@@ -23,7 +28,7 @@ export async function AddUser(userData: AddUserData) {
 
 }
 
-export async function GetAllUsers(): Promise<User[]> {
+export async function GetAllUsers(token : string): Promise<User[]> {
 
   if (!token) {
     throw new Error('No token found');
@@ -45,14 +50,19 @@ export async function GetAllUsers(): Promise<User[]> {
   }
 }
 
-export async function UpdateUser(userId: number, updatedUserData: UpdateUserData) {
+export async function UpdateUser(userId: number, updatedUserData: UpdateUserData, token : string) {
+ 
+  if (!token) {
+    throw new Error('No token found');
+  }
+
   try {
     const response = await axios.put(`${API_BASE_URL}/user/${userId}`, updatedUserData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-
+    
     return response.data;
   } catch (error) {
     console.error('Failed to update user', error);
@@ -60,7 +70,12 @@ export async function UpdateUser(userId: number, updatedUserData: UpdateUserData
   }
 }
 
-export async function DeleteUser(userId: number) {
+export async function DeleteUser(userId: number, token : string) {
+  
+  if (!token) {
+    throw new Error('No token found');
+  }
+  
   try {
     const response = await axios.delete(`${API_BASE_URL}/user/${userId}`,{
       headers: {
