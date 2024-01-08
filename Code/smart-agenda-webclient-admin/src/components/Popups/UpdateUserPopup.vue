@@ -59,15 +59,87 @@ const HandleClose = () => {
 </script>
 
 <template>
-  <div class="UpdateUserPopup">
-    <button @click="HandleClose">Close</button>
-    <input v-model="username" type="text" placeholder="Username" />
-    <input v-model="email" type="email" placeholder="Email" />
-    <input v-model="password" type="password" placeholder="Password" />
-    <select v-model="userRole">
+  <div class="updateUserPopup">
+    <button @click="HandleClose">X</button>
+
+  <div class="updateUsernameInput">
+    <label for="username">Username:</label>
+    <input v-model="username" type="text" placeholder="Username" id="username" />
+  </div>
+
+  <div class="updateEmailInput">
+    <label for="email">Email:</label>
+    <input v-model="email" type="email" placeholder="Email" id="email" />
+  </div>
+  <div class="updatePasswordInput">
+    <label for="password">Password:</label>
+    <input v-model="password" type="password" placeholder="Password" id="password" />
+  </div>
+
+  <div class="updateUserRoleInput">
+    <label for="userRole">Role:</label>
+    <select v-model="userRole" id="userRole">
       <option :value="UserRole.User">User</option>
       <option :value="UserRole.Admin">Admin</option>
     </select>
-    <button @click="HandleUpdate">Update User</button>
+  </div>
+
+    <button class="buttonUpdate" @click="HandleUpdate">Update</button>
   </div>
 </template>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500&display=swap');
+.updateUserPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  padding: 40px;
+  background-color: white;
+  border: 1px solid black;
+  box-shadow: 0px 0px 10px rgba(2, 1, 1, 0.1);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: 'Baloo Bhaijaan 2';
+}
+
+
+.updateUserPopup button:first-child {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.updateUserPopup .updateEmailInput,
+.updateUserPopup .updatePasswordInput,
+.updateUserPopup .updateUserRoleInput{
+  margin-top: 10px; 
+}
+.updateUserPopup input {
+  width: 100%;
+}
+
+.buttonUpdate{
+  margin-top: 32px;
+  background-color: #4d4e4d;
+  border: none;
+  color: white;
+  padding: 3px;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+  font-family: 'Baloo Bhaijaan 2', sans-serif;
+}
+
+</style>
+
+
+

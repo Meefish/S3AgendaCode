@@ -59,6 +59,11 @@ const RefreshUsers = () => {
   FetchUsers(); 
 };
 
+const Logout = () => {
+  localStorage.removeItem('jwtToken');
+  window.location.href = '/';
+};
+
 const GetUserRoleName = (roleNumber: UserRole) => {
   return roleNumber === UserRole.Admin ? 'Admin' : 'User';
 };
@@ -67,16 +72,18 @@ onMounted(FetchUsers);
 </script>
 
 <template>
-  <main>
-    <button @click="HandleAddUser()">Add user</button>
+  <button @click="Logout()">Logout</button>
+  <button @click="HandleAddUser()">Add user</button>
+  <main class="main">
      <div v-if="error" class="error">{{ error }}</div>
-     <table>
+     <table class="admin-table">
       <thead>
         <tr>
           <th>UserId</th>
           <th>Username</th>
           <th>Email</th>
-          <th>UserRole</th>
+          <th>Role</th>
+          <th>Actions</th>
         </tr>
       </thead>
       
@@ -108,3 +115,38 @@ onMounted(FetchUsers);
     />
   </main>
 </template>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500&display=swap');
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh; 
+}
+
+.admin-table {
+  border-collapse: collapse;
+  width: 84%; 
+
+}
+
+.admin-table th, .admin-table td {
+  border: 1px solid #000000; 
+  font-family: 'Baloo Bhaijaan 2';
+  text-align: left;
+  padding: 10px;
+}
+
+.admin-table th {
+  background-color: #f4f4f4e4; 
+}
+
+.admin-table tr:nth-child(even) {
+  background-color: #f9f9f9e6;
+}
+
+.admin-table tr:hover {
+  background-color: #eaeaea; 
+}
+</style>
