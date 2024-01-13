@@ -39,9 +39,9 @@ builder.Services.AddDbContext<Smart_Agenda_DAL.DataBase>(options =>
 
 var app = builder.Build();
 
-var webSocketConfig = app.Services.GetRequiredService<WebSocketConfiguration>();
+/*var webSocketConfig = app.Services.GetRequiredService<WebSocketConfiguration>();
 webSocketConfig.ConfigureWebSockets(app);
-
+*/
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

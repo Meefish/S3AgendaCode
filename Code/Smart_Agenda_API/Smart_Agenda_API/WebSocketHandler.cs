@@ -1,10 +1,5 @@
-﻿using Newtonsoft.Json;
-using Smart_Agenda_Logic.Interfaces;
-using System.Net.WebSockets;
-using System.Text;
-
-namespace Smart_Agenda_API
-{
+﻿namespace Smart_Agenda_API
+{/*
     public class WebSocketHandler
     {
         private readonly IServiceScopeFactory _scopeFactory;
@@ -94,5 +89,5 @@ namespace Smart_Agenda_API
                 await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
             }
         }
-    }
+    } */
 }
