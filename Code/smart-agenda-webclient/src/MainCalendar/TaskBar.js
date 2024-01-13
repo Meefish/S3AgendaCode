@@ -20,23 +20,28 @@ const TaskBar = ({ task, onClick }) => {
   };
 
 
-  const GetPriorityColor = (priority) => {
+  const GetPriorityColor = (priority, status) => {
+    if (status){
+      return 'grey';
+    }
+    
     switch (priority) {
       case 0: 
-        return 'green';
+        return '#00C213';
       case 1: 
-        return 'yellow';
+        return '#FFEE00';
       case 2: 
-        return 'orange';
+        return '#FF9900';
       case 3: 
-        return 'red';
+        return '#FA1200';
       default:
         return 'grey';
     }
   };
 
   const taskStyle = {
-    backgroundColor: GetPriorityColor(task.taskPriority),
+    backgroundColor: GetPriorityColor(task.taskPriority, task.status),
+    textDecoration: task.status ? 'line-through' : 'none',
   };
 
   return (

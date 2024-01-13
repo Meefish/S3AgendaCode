@@ -1,9 +1,10 @@
 import React, { useState, useEffect} from 'react';
 import '../CSS/DateHandler.css';
-import AddTaskPopup from './AddTaskPopup'; 
 import { jwtDecode } from 'jwt-decode';
 import * as AgendaApi from './AgendaApi';
 import TaskBar from './TaskBar'
+import AddTaskPopup from './AddTaskPopup'; 
+import AddTaskButtonPopup from './AddTaskButtonPopup';
 import UpdateTaskPopup from './UpdateTaskPopup';
 
 export function DateHandler({token}) {
@@ -15,12 +16,14 @@ export function DateHandler({token}) {
   const [year, SetYear] = useState(GetCurrentYear());
 
   const [isPopupVisible, SetIsAddPopupVisible] = useState(false); 
+  const [isAddButtonPopupVisible, SetIsAddButtonPopupVisible] = useState(false);
   const [selectedDate, SetSelectedDate] = useState(null);  
   const [selectedTask, SetSelectedTask] = useState(null);
   const [isUpdatePopupVisible, SetIsUpdatePopupVisible] = useState(false);
     
 
   const [taskName, SetTaskName] = useState('');
+  const [taskInputDate, SetTaskInputDate] = useState('');
   const [taskTime, SetTaskTime] = useState('');
   const [taskPriority, SetTaskPriority] = useState(0);
   const [taskStatus, SetTaskStatus] = useState(false);
@@ -88,6 +91,13 @@ export function DateHandler({token}) {
 
   
   const HandleSaveTask = async () => {
+
+
+    if (!taskName.trim()) {
+      alert('Task name cannot be empty.');
+      return;
+    }
+
     const [year, month, day] = FormatDate(selectedDate).split('-').map(Number);
     let dueDateTime;
     if (taskTime) {
@@ -96,6 +106,15 @@ export function DateHandler({token}) {
     } else {
       dueDateTime = new Date(Date.UTC(year, month - 1, day)).toISOString();
     }
+
+    const now = new Date();
+    const dueDateObject = new Date(dueDateTime);
+    
+    if (dueDateObject < now) {
+      alert('Tasks cannot be planned in the past.');
+      return; 
+    }
+
     const taskData = {
       "TaskName": taskName,
       "DueDate": dueDateTime,
@@ -113,6 +132,50 @@ export function DateHandler({token}) {
       throw error;
     }
   };
+
+  const HandleSaveButtonTask = async () => {
+
+    if (!taskName.trim()) {
+      alert('Task name cannot be empty.');
+      return;
+    }
+
+    const [year, month, day] = taskInputDate.split('-').map(Number);
+    let dueDateTime;
+    if (taskTime) {
+      const [hours, minutes] = taskTime.split(':').map(Number);
+      dueDateTime = new Date(year, month - 1, day, hours, minutes).toISOString();
+    } else {
+      dueDateTime = new Date(year, month - 1, day).toISOString();
+    }
+
+    const now = new Date();
+    const dueDateObject = new Date(dueDateTime);
+    if (dueDateObject < now) {
+      alert('Tasks cannot be planned in the past.');
+      return; 
+    }
+
+    const taskData = {
+      "TaskName": taskName,
+      "DueDate": dueDateTime,
+      "TaskPriority": taskPriority,
+      "Status": taskStatus,
+      "CalendarId": calendarId
+    };
+  
+    try {
+      await AgendaApi.AddTask(taskData, token);
+      console.log('Task added successfully');
+      SetIsAddButtonPopupVisible(false); 
+      FetchTasks(); 
+    } catch (error) {
+      console.error('Failed to save task', error);
+    }
+  };
+  
+
+
 
   const HandleDeleteTask = async (taskId) => {
     try {
@@ -136,7 +199,6 @@ export function DateHandler({token}) {
         "TaskPriority": taskPriority,
         "Status": taskStatus,
     };
-    
     
     try {
       await AgendaApi.UpdateTask(taskId, updatedTaskData, token); 
@@ -194,10 +256,22 @@ export function DateHandler({token}) {
 
   return (
     <div>
-      <span className="current-month-year-display">{GetMonthYearNames(month, year)}</span>
-      <button onClick={HandlePrevMonth}>Previous</button>
-      <button onClick={HandleCurrentDate}>Today</button>
-      <button onClick={HandleNextMonth}>Next</button>
+       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <div className="month-container">
+      <div className="month-header">
+        <span className="current-month-year-display">{GetMonthYearNames(month, year)}</span>
+      </div>
+      <div className='button-month-container'>
+        <div className="month-direction-buttons">
+          <button onClick={HandlePrevMonth}>Previous</button>
+          <button onClick={HandleCurrentDate}>Today</button>
+          <button onClick={HandleNextMonth}>Next</button>
+        </div>
+        <button className='add-task-button' onClick={() => SetIsAddButtonPopupVisible(true)}>
+          <span className="material-symbols-outlined">add_task</span>
+        </button>
+      </div>
+    </div>
 
       <table className="calendar-table">
         <thead>
@@ -215,7 +289,11 @@ export function DateHandler({token}) {
           {Array.from({ length: Math.ceil(calendarDays.length / 7) }).map((_, rowIndex) => (
             <tr key={rowIndex}>
               {calendarDays.slice(rowIndex * 7, rowIndex * 7 + 7).map((day, dayIndex) => {
-                  const { actualMonth, actualYear, isActualMonth } = GetActualMonthYear(day, rowIndex, month, year);
+                  const { 
+                    actualMonth, 
+                    actualYear, 
+                    isActualMonth 
+                  } = GetActualMonthYear(day, rowIndex, month, year);
                   const isCurrentDay = day === currentDay && actualMonth === currentMonth && actualYear === currentYear && isActualMonth;
                   let dayTasks = Array.isArray(tasks) ? tasks.filter(task => IsTaskOnDay(task, day, actualMonth, actualYear)) : [];
                   dayTasks = SortTasksByTime(dayTasks);  
@@ -249,6 +327,25 @@ export function DateHandler({token}) {
           onClosePopup={() => SetIsAddPopupVisible(false)}
         />
       )}
+
+{isAddButtonPopupVisible && (
+<AddTaskButtonPopup
+  TaskName={taskName}
+  SetTaskName={SetTaskName}
+  taskInputDate={taskInputDate}
+  SetTaskInputDate={SetTaskInputDate}
+  taskTime={taskTime}
+  SetTaskTime={SetTaskTime}
+  taskPriority={taskPriority}
+  SetTaskPriority={SetTaskPriority}
+  taskStatus={taskStatus}
+  SetTaskStatus={SetTaskStatus}
+  onSaveButtonTask={HandleSaveButtonTask} 
+  onClosePopup={() => SetIsAddButtonPopupVisible(false)}
+/>
+)}
+
+
 
 {isUpdatePopupVisible && selectedTask && (
   <UpdateTaskPopup
