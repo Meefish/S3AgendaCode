@@ -1,6 +1,8 @@
 import React from 'react';
 
-function AddTaskPopup({ selectedDate, taskText, SetTaskName, taskTime, SetTaskTime, taskPriority, SetTaskPriority, taskStatus, SetTaskStatus, onSaveTask, onClosePopup }) {
+function AddTaskPopup({ selectedDate, taskText, SetTaskName, taskTime, 
+  SetTaskTime, taskPriority, SetTaskPriority, taskStatus, SetTaskStatus, onSaveTask, onClosePopup }) 
+  {
   return (
     <div className="popup">
       <button onClick={onClosePopup}>X</button>

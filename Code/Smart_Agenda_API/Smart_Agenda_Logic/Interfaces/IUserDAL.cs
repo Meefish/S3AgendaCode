@@ -7,6 +7,7 @@ namespace Smart_Agenda_Logic.Interfaces
 
         Task<User> AddUser(User user);
         Task<User> GetUser(int id);
+        Task<List<User>> GetAllUsers();
         Task<User> UpdateUser(User user);
         Task<User> DeleteUser(int id);
         Task<User> GetUserByEmail(string email);

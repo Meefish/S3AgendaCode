@@ -60,6 +60,32 @@ namespace Smart_Agenda_DAL
             }, ex => new RetrieveUserException("Retrieving a user went wrong", ex));
         }
 
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await ExecuteDbOperationAsync(async () =>
+            {
+                var users = await _context.User.ToListAsync();
+                if (users == null)
+                {
+                    throw new RetrieveUserException("Users not found");
+                }
+                return users;
+
+            }, ex => new RetrieveUserException("Retrieving users went wrong", ex));
+        }
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await ExecuteDbOperationAsync(async () =>
+            {
+                var user = await _context.User.FirstOrDefaultAsync(u => u.Email == email);
+                if (user == null)
+                {
+                    throw new RetrieveUserException("User not found");
+                }
+                return user;
+            }, ex => new RetrieveUserException("Retrieving a user went wrong", ex));
+        }
+
         public async Task<User> UpdateUser(User user)
         {
             return await ExecuteDbOperationAsync(async () =>
@@ -87,18 +113,6 @@ namespace Smart_Agenda_DAL
             }, ex => new DeleteUserException("Deleting a user went wrong", ex));
         }
 
-        public async Task<User> GetUserByEmail(string email)
-        {
-            return await ExecuteDbOperationAsync(async () =>
-            {
-                var user = await _context.User.FirstOrDefaultAsync(u => u.Email == email);
-                if (user == null)
-                {
-                    throw new RetrieveUserException("User not found");
-                }
-                return user;
-            }, ex => new RetrieveUserException("Retrieving a user went wrong", ex));
-        }
 
 
 

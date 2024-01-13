@@ -35,9 +35,6 @@ namespace Smart_Agenda_DAL
                 throw new CalendarException($"The calendar with ID {calendarId} does not exist.");
             }
         }
-
-
-
         public async Task<List<Smart_Agenda_Logic.Domain.Task>> GetAllCalendarTasks(int calendarId)
         {
             return await ExecuteDbOperationAsync(async () =>

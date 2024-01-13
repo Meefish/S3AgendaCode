@@ -20,8 +20,8 @@ builder.Services.AddScoped<TaskManager>();
 builder.Services.AddScoped<CalendarManager>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddSingleton<WebSocketConfiguration>();
-builder.Services.AddScoped<WebSocketHandler>();
+//builder.Services.AddSingleton<WebSocketConfiguration>();
+//builder.Services.AddScoped<WebSocketHandler>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,9 +39,9 @@ builder.Services.AddDbContext<Smart_Agenda_DAL.DataBase>(options =>
 
 var app = builder.Build();
 
-var webSocketConfig = app.Services.GetRequiredService<WebSocketConfiguration>();
+/*var webSocketConfig = app.Services.GetRequiredService<WebSocketConfiguration>();
 webSocketConfig.ConfigureWebSockets(app);
-
+*/
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -47,13 +47,13 @@ namespace Logic.UnitTest
         public async Task DeleteAllCalendarTasks_MustContainCalendarId()
         {
             //  Arrange
-            int calendarId = 0;
+            int userId = 0;
             CalendarManager calendarManager = new CalendarManager(_mockCalendarDAL);
 
 
             // Act & Assert
             var exception = await Assert.ThrowsExceptionAsync<CalendarException>(
-                              async () => await calendarManager.DeleteAllCalendarTasks(calendarId));
+                              async () => await calendarManager.DeleteAllCalendarTasks(userId));
             Assert.AreEqual("The calendar doesn't exist.", exception.Message);
         }
 

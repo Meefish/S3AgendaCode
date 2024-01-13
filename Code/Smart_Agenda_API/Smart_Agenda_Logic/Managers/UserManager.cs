@@ -59,6 +59,14 @@ namespace Smart_Agenda_Logic.Managers
             }, ex => new UserException(ex.Message, ex));
         }
 
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await ExecuteUserOperationAsync(async () =>
+            {
+                return await _userDAL.GetAllUsers();
+            }, ex => new UserException(ex.Message, ex));
+        }
+
         public async Task<User> GetUserByEmail(string email)
         {
             return await ExecuteUserOperationAsync(async () =>
