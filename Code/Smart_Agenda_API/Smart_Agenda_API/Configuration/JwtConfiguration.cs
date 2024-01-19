@@ -8,7 +8,7 @@ namespace Smart_Agenda_API.Configuration
     {
         public string Key { get; set; }
         public string Issuer { get; set; }
-        public string Audience { get; set; }
+        public string[] Audience { get; set; }
 
     }
     public static class JwtConfiguration
@@ -30,7 +30,7 @@ namespace Smart_Agenda_API.Configuration
                     ValidateIssuer = true,
                     ValidIssuer = jwtSettings.Issuer,
                     ValidateAudience = true,
-                    ValidAudience = jwtSettings.Audience,
+                    ValidAudiences = jwtSettings.Audience,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
                 };

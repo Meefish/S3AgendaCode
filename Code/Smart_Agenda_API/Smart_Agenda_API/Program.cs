@@ -31,7 +31,6 @@ var environment = builder.Environment;
 var connectionStringName = environment.IsEnvironment("Testing") ? "TestConnection" : "DefaultConnection";
 var connectionString = builder.Configuration.GetConnectionString(connectionStringName);
 
-
 builder.Services.AddDbContext<Smart_Agenda_DAL.DataBase>(options =>
 {
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
