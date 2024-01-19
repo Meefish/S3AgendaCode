@@ -26,7 +26,7 @@ namespace Smart_Agenda_DAL
             }
         }
 
-        private void checkCalendarExists(int calendarId)
+        private void CheckCalendarExists(int calendarId)
         {
             bool calendarExists = _context.Calendar
                                          .Any(calendar => calendar.CalendarId == calendarId);
@@ -39,7 +39,7 @@ namespace Smart_Agenda_DAL
         {
             return await ExecuteDbOperationAsync(async () =>
             {
-                checkCalendarExists(calendarId);
+                CheckCalendarExists(calendarId);
 
                 var tasks = await _context.Task
                                           .Where(task => task.CalendarId == calendarId)
@@ -49,11 +49,16 @@ namespace Smart_Agenda_DAL
             }, ex => new CalendarException("Retrieving tasks went wrong", ex));
         }
 
-        public async Task DeleteAllCalendarTasks(int calendarId)
+        public async Task DeleteAllCalendarTasks(int userId)
         {
             try
             {
-                checkCalendarExists(calendarId);
+                var calendarId = await _context.Calendar
+                                                .Where(calendar => calendar.UserId == userId)
+                                                .Select(calendar => calendar.CalendarId)
+                                                .FirstOrDefaultAsync();
+
+                CheckCalendarExists(calendarId);
 
                 var tasks = await _context.Task
                                  .Where(task => task.CalendarId == calendarId)
@@ -92,8 +97,8 @@ namespace Smart_Agenda_DAL
             return await ExecuteDbOperationAsync(async () =>
             {
                 var currentTime = DateTime.Now;
-                //  var checkInterval = TimeSpan.FromSeconds(15);  // If you don't want to fry the database
-                var checkInterval = TimeSpan.FromMilliseconds(35); // The 35 milliseconds are added because without the polling 
+                var checkInterval = TimeSpan.FromSeconds(15);  // If you don't want to fry the database
+                //var checkInterval = TimeSpan.FromMilliseconds(35); // The 35 milliseconds are added because without the polling 
                 var tasks = await _context.Task                    // the inbox would be spammed with notifications lol
                            .Where(task => task.CalendarId == calendarId &&
                             task.DueDate >= currentTime &&

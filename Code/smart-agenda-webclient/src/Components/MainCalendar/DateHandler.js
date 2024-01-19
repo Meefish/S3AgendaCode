@@ -1,11 +1,11 @@
 import React, { useState, useEffect} from 'react';
-import '../CSS/DateHandler.css';
+import '../../Assets/CSS/DateHandler.css';
 import { jwtDecode } from 'jwt-decode';
-import * as AgendaApi from './AgendaApi';
-import TaskBar from './TaskBar'
-import AddTaskPopup from './AddTaskPopup'; 
-import AddTaskButtonPopup from './AddTaskButtonPopup';
-import UpdateTaskPopup from './UpdateTaskPopup';
+import * as AgendaApi from '../../API/AgendaApi';
+import TaskBar from './TaskBar';
+import AddTaskPopup from './Popups/AddTaskPopup'; 
+import AddTaskButtonPopup from './Popups/AddTaskButtonPopup';
+import UpdateTaskPopup from './Popups/UpdateTaskPopup';
 
 export function DateHandler({token}) {
 
@@ -144,9 +144,9 @@ export function DateHandler({token}) {
     let dueDateTime;
     if (taskTime) {
       const [hours, minutes] = taskTime.split(':').map(Number);
-      dueDateTime = new Date(year, month - 1, day, hours, minutes).toISOString();
+      dueDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes)).toISOString();
     } else {
-      dueDateTime = new Date(year, month - 1, day).toISOString();
+      dueDateTime = new Date(Date.UTC(year, month - 1, day)).toISOString();
     }
 
     const now = new Date();

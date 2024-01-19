@@ -4,7 +4,7 @@
     {
 
         Task<List<Domain.Task>> GetAllCalendarTasks(int calendarId);
-        Task DeleteAllCalendarTasks(int calendarId);
+        Task DeleteAllCalendarTasks(int userId);
 
         Task<Domain.Calendar> GetCalendarForUser(int userId);
 

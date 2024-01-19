@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import type { User } from '../interfaces/UserData/User';
-import { UpdateUser } from '../API/UserApi'; 
+import { UpdateUser } from '../../API/UserApi'; 
 import type { UpdateUserData } from '../interfaces/UserData/UpdateUser';
 import { UserRole } from '../interfaces/UserData/UpdateUser';
 

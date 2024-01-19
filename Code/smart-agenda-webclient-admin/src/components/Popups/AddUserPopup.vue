@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { AddUser } from '../API/UserApi'; 
+import { AddUser } from '../../API/UserApi'; 
 import type { AddUserData } from '../interfaces/UserData/AddUser';
 
 const emit = defineEmits(['close', 'add']);

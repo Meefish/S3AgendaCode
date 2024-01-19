@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { LoginUser } from '../components/API/LoginApi';
+import { LoginUser } from '../API/LoginApi';
 
 export default defineComponent({
   name: 'Login',

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import '../../CSS/DateHandler.css';
+import '../../../Assets/CSS/DateHandler.css';
 import {jwtDecode} from 'jwt-decode';
 
+
+const WebSocket_URL = process.env.REACT_APP_WEBSOCKET_BASE_URL;
 
 function LiveTaskEvent({token}) {     // eslint-disable-next-line
     const [webSocket, SetWebSocket] = useState(null);  
@@ -21,7 +23,7 @@ function LiveTaskEvent({token}) {     // eslint-disable-next-line
 
           const calendarId = GetCalendarIdFromToken(token);
 
-        const ws = new WebSocket('ws://localhost:5036/ws');
+        const ws = new WebSocket(WebSocket_URL);
         SetWebSocket(ws);
 
         ws.onopen = () => {

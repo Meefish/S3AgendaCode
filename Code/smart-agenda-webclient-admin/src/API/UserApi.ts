@@ -1,7 +1,7 @@
 import axios from 'axios';
-import type { User } from '../interfaces/UserData/User';
-import type { UpdateUserData } from '../interfaces/UserData/UpdateUser';
-import type { AddUserData } from '../interfaces/UserData/AddUser';
+import type { User } from '../components/interfaces/UserData/User';
+import type { UpdateUserData } from '../components/interfaces/UserData/UpdateUser';
+import type { AddUserData } from '../components/interfaces/UserData/AddUser';
 
 const API_BASE_URL = 'https://localhost:7270';
 

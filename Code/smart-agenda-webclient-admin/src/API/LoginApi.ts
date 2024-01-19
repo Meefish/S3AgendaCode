@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
-import type {DecodedToken } from '../interfaces/DecodedToken';
-import type { LoginResponse } from '../interfaces/LoginResponse';
+import type {DecodedToken } from '../components/interfaces/DecodedToken';
+import type { LoginResponse } from '../components/interfaces/LoginResponse';
 
 const API_BASE_URL = 'https://localhost:7270';
 

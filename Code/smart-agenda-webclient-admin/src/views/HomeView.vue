@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { ResetCalendar } from '../components/API/CalendarApi';
-import { DeleteUser, GetAllUsers } from '../components/API/UserApi';
+import { ResetCalendar } from '../API/CalendarApi';
+import { DeleteUser, GetAllUsers } from '../API/UserApi';
 import AddUserPopup from '../components/Popups/AddUserPopup.vue';
 import UpdateUserPopup from '../components/Popups/UpdateUserPopup.vue';
 import type { User } from '../components/interfaces/UserData/User';

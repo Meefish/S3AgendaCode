@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://localhost:7270';
+const API_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const AddTask = async (taskData, token) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/task`, taskData, {
+    const response = await axios.post(`${API_URL}/task`, taskData, {
       headers: {
         Authorization: `Bearer ${token}`, 
       },
@@ -19,7 +19,7 @@ export const AddTask = async (taskData, token) => {
 
 export const GetAllCalendarTasks = async (calendarId, token) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/Calendar/${calendarId}`, {
+    const response = await axios.get(`${API_URL}/Calendar/${calendarId}`, {
       params: { calendarId },
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -34,7 +34,7 @@ export const GetAllCalendarTasks = async (calendarId, token) => {
 
 export const UpdateTask = async (taskId, updatedTaskData, token) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/task/${taskId}`, updatedTaskData, {
+    const response = await axios.put(`${API_URL}/task/${taskId}`, updatedTaskData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -49,7 +49,7 @@ export const UpdateTask = async (taskId, updatedTaskData, token) => {
 
 export const DeleteTask = async (taskId, token) => {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/task/${taskId}`, {
+    const response = await axios.delete(`${API_URL}/task/${taskId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

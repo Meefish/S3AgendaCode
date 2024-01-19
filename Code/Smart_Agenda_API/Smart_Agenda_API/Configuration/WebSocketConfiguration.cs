@@ -1,6 +1,5 @@
 ﻿namespace Smart_Agenda_API.Configuration
 {
-    /*
     public class WebSocketConfiguration
     {
         private readonly IServiceScopeFactory _scopeFactory;
@@ -41,5 +40,4 @@
             });
         }
     }
-    */
 }

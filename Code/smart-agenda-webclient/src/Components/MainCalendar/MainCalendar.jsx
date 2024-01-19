@@ -1,5 +1,5 @@
 import React from 'react';
-import '../CSS/MainCalendar.css';
+import '../../Assets/CSS/MainCalendar.css';
 import DateHandler from './DateHandler.js'; 
 import LiveTaskEvent from './WebSocket/WebSocket.jsx';
 

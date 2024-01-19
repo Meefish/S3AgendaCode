@@ -1,41 +1,33 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { LoginUser } from '../API/LoginApi';
 
 const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, SetEmail] = useState('');
+  const [password, SetPassword] = useState('');
+  const [error, SetError] = useState('');
 
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const HandleEmailChange = (e) => SetEmail(e.target.value);
+  const HandlePasswordChange = (e) => SetPassword(e.target.value);
 
-  const handleSubmit = async (e) => {
+  const HandleSubmit = async (e) => {
       e.preventDefault();
-      setError(''); 
+      SetError(''); 
 
       
       try {
-        const response = await axios.post('https://localhost:7270/user/login', {
-          email,
-          password,
-      });
-      if (response.status === 200 && response.data.token) {
-        localStorage.setItem('jwtToken', response.data.token);
+        const result = await LoginUser(email, password);
+        localStorage.setItem('jwtToken', result.token);
         
-        onLogin(response.data.token);
+        onLogin(result.token);
         console.log('Login successful');
-    } else {
-        
-        setError('Login failed: ' + response.statusText); 
-    }
       } catch (error) {
-          setError('Login failed: ' + error.message);
+          SetError('Login failed: ' + error.message);
       }
   };
 
   return (
       <div className="login-container">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={HandleSubmit}>
               <h2>Login</h2>
               {error && <p className="error">{error}</p>}
               <div>
@@ -44,7 +36,7 @@ const Login = ({ onLogin }) => {
                       type="email" 
                       id="email" 
                       value={email} 
-                      onChange={handleEmailChange} 
+                      onChange={HandleEmailChange} 
                       required 
                   />
               </div>
@@ -54,7 +46,7 @@ const Login = ({ onLogin }) => {
                       type="password" 
                       id="password" 
                       value={password} 
-                      onChange={handlePasswordChange} 
+                      onChange={HandlePasswordChange} 
                       required 
                   />
               </div>

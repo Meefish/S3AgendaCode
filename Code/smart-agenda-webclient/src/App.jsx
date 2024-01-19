@@ -1,4 +1,4 @@
-import MainCalendar from "./MainCalendar/MainCalendar";
+import MainCalendar from "./Components/MainCalendar/MainCalendar";
 import Login from "./Login/Login";
 import React, {useState, useEffect} from "react";
 

@@ -138,7 +138,7 @@ describe('Calendar Priority Color Check', () => {
 
     cy.get('.task-bar').contains('Walking the dog 12:30')
     .should('have.attr', 'style')
-    .and('include', 'background-color: green');
+    .and('include', 'background-color: rgb(0, 194, 19)');
 
     //For cleanup
     cy.DeleteTask('Walking the dog', '12:30');
@@ -150,7 +150,7 @@ describe('Calendar Priority Color Check', () => {
 
     cy.get('.task-bar').contains('Yoga class 17:30')
     .should('have.attr', 'style')
-    .and('include', 'background-color: yellow');
+    .and('include', 'background-color: rgb(255, 238, 0)');
 
     //For cleanup
     cy.DeleteTask('Yoga class', '17:30');
@@ -162,7 +162,7 @@ describe('Calendar Priority Color Check', () => {
 
     cy.get('.task-bar').contains('Preparing dinner 19:30')
     .should('have.attr', 'style')
-    .and('include', 'background-color: orange');
+    .and('include', 'background-color: rgb(255, 153, 0)');
 
     //For cleanup
     cy.DeleteTask('Preparing dinner', '19:30');
@@ -174,7 +174,7 @@ describe('Calendar Priority Color Check', () => {
 
     cy.get('.task-bar').contains('Sleep schedule 20:45')
     .should('have.attr', 'style')
-    .and('include', 'background-color: red');
+    .and('include', 'background-color: rgb(250, 18, 0)');
 
     //For cleanup
     cy.DeleteTask('Sleep schedule', '20:45');
@@ -228,7 +228,7 @@ describe('Calendar Update Task Functionality', () => {
     cy.get('.task-bar').should('contain', 'Walking the dog 12:30');
     cy.get('.task-bar').contains('Walking the dog 12:30')
     .should('have.attr', 'style')
-    .and('include', 'background-color: red');
+    .and('include', 'background-color: rgb(250, 18, 0)');
 
     //For cleanup
     cy.DeleteTask('Walking the dog', '12:30');
